@@ -1,0 +1,492 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D3A6905418EBF1BF000029B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905318EBF1BF000029B8 /* Foundation.framework */; };
+		D3A6905618EBF1BF000029B8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905518EBF1BF000029B8 /* CoreGraphics.framework */; };
+		D3A6905818EBF1BF000029B8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905718EBF1BF000029B8 /* UIKit.framework */; };
+		D3A6905E18EBF1BF000029B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3A6905C18EBF1BF000029B8 /* InfoPlist.strings */; };
+		D3A6906018EBF1BF000029B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6905F18EBF1BF000029B8 /* main.m */; };
+		D3A6906418EBF1BF000029B8 /* WYAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6906318EBF1BF000029B8 /* WYAppDelegate.m */; };
+		D3A6906718EBF1BF000029B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3A6906518EBF1BF000029B8 /* Main.storyboard */; };
+		D3A6906A18EBF1BF000029B8 /* WYViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6906918EBF1BF000029B8 /* WYViewController.m */; };
+		D3A6906C18EBF1BF000029B8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3A6906B18EBF1BF000029B8 /* Images.xcassets */; };
+		D3A6907318EBF1BF000029B8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6907218EBF1BF000029B8 /* XCTest.framework */; };
+		D3A6907418EBF1BF000029B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905318EBF1BF000029B8 /* Foundation.framework */; };
+		D3A6907518EBF1BF000029B8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905718EBF1BF000029B8 /* UIKit.framework */; };
+		D3A6907D18EBF1BF000029B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3A6907B18EBF1BF000029B8 /* InfoPlist.strings */; };
+		D3A6907F18EBF1BF000029B8 /* WYVideoPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6907E18EBF1BF000029B8 /* WYVideoPlayerTests.m */; };
+		D3A6908C18EBF1E0000029B8 /* WYMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */; };
+		D3A6908D18EBF1E0000029B8 /* WYVidoePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */; };
+		D3A6909018EBF21A000029B8 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908F18EBF21A000029B8 /* UIView+Utils.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D3A6907618EBF1BF000029B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D3A6904818EBF1BF000029B8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3A6904F18EBF1BF000029B8;
+			remoteInfo = WYVideoPlayer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D3A6905018EBF1BF000029B8 /* WYVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WYVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3A6905318EBF1BF000029B8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D3A6905518EBF1BF000029B8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D3A6905718EBF1BF000029B8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D3A6905B18EBF1BF000029B8 /* WYVideoPlayer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WYVideoPlayer-Info.plist"; sourceTree = "<group>"; };
+		D3A6905D18EBF1BF000029B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D3A6905F18EBF1BF000029B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D3A6906118EBF1BF000029B8 /* WYVideoPlayer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WYVideoPlayer-Prefix.pch"; sourceTree = "<group>"; };
+		D3A6906218EBF1BF000029B8 /* WYAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYAppDelegate.h; sourceTree = "<group>"; };
+		D3A6906318EBF1BF000029B8 /* WYAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYAppDelegate.m; sourceTree = "<group>"; };
+		D3A6906618EBF1BF000029B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D3A6906818EBF1BF000029B8 /* WYViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYViewController.h; sourceTree = "<group>"; };
+		D3A6906918EBF1BF000029B8 /* WYViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYViewController.m; sourceTree = "<group>"; };
+		D3A6906B18EBF1BF000029B8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		D3A6907118EBF1BF000029B8 /* WYVideoPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WYVideoPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3A6907218EBF1BF000029B8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		D3A6907A18EBF1BF000029B8 /* WYVideoPlayerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WYVideoPlayerTests-Info.plist"; sourceTree = "<group>"; };
+		D3A6907C18EBF1BF000029B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D3A6907E18EBF1BF000029B8 /* WYVideoPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYVideoPlayerTests.m; sourceTree = "<group>"; };
+		D3A6908818EBF1E0000029B8 /* WYMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYMoviePlayerController.h; sourceTree = "<group>"; };
+		D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYMoviePlayerController.m; sourceTree = "<group>"; };
+		D3A6908A18EBF1E0000029B8 /* WYVidoePlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYVidoePlayerView.h; sourceTree = "<group>"; };
+		D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYVidoePlayerView.m; sourceTree = "<group>"; };
+		D3A6908E18EBF21A000029B8 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
+		D3A6908F18EBF21A000029B8 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D3A6904D18EBF1BF000029B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3A6905618EBF1BF000029B8 /* CoreGraphics.framework in Frameworks */,
+				D3A6905818EBF1BF000029B8 /* UIKit.framework in Frameworks */,
+				D3A6905418EBF1BF000029B8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3A6906E18EBF1BF000029B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3A6907318EBF1BF000029B8 /* XCTest.framework in Frameworks */,
+				D3A6907518EBF1BF000029B8 /* UIKit.framework in Frameworks */,
+				D3A6907418EBF1BF000029B8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D3A6904718EBF1BF000029B8 = {
+			isa = PBXGroup;
+			children = (
+				D3A6905918EBF1BF000029B8 /* WYVideoPlayer */,
+				D3A6907818EBF1BF000029B8 /* WYVideoPlayerTests */,
+				D3A6905218EBF1BF000029B8 /* Frameworks */,
+				D3A6905118EBF1BF000029B8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D3A6905118EBF1BF000029B8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D3A6905018EBF1BF000029B8 /* WYVideoPlayer.app */,
+				D3A6907118EBF1BF000029B8 /* WYVideoPlayerTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D3A6905218EBF1BF000029B8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D3A6905318EBF1BF000029B8 /* Foundation.framework */,
+				D3A6905518EBF1BF000029B8 /* CoreGraphics.framework */,
+				D3A6905718EBF1BF000029B8 /* UIKit.framework */,
+				D3A6907218EBF1BF000029B8 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D3A6905918EBF1BF000029B8 /* WYVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				D3A6908E18EBF21A000029B8 /* UIView+Utils.h */,
+				D3A6908F18EBF21A000029B8 /* UIView+Utils.m */,
+				D3A6906218EBF1BF000029B8 /* WYAppDelegate.h */,
+				D3A6906318EBF1BF000029B8 /* WYAppDelegate.m */,
+				D3A6906518EBF1BF000029B8 /* Main.storyboard */,
+				D3A6906818EBF1BF000029B8 /* WYViewController.h */,
+				D3A6906918EBF1BF000029B8 /* WYViewController.m */,
+				D3A6908818EBF1E0000029B8 /* WYMoviePlayerController.h */,
+				D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */,
+				D3A6908A18EBF1E0000029B8 /* WYVidoePlayerView.h */,
+				D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */,
+				D3A6906B18EBF1BF000029B8 /* Images.xcassets */,
+				D3A6905A18EBF1BF000029B8 /* Supporting Files */,
+			);
+			path = WYVideoPlayer;
+			sourceTree = "<group>";
+		};
+		D3A6905A18EBF1BF000029B8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3A6905B18EBF1BF000029B8 /* WYVideoPlayer-Info.plist */,
+				D3A6905C18EBF1BF000029B8 /* InfoPlist.strings */,
+				D3A6905F18EBF1BF000029B8 /* main.m */,
+				D3A6906118EBF1BF000029B8 /* WYVideoPlayer-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3A6907818EBF1BF000029B8 /* WYVideoPlayerTests */ = {
+			isa = PBXGroup;
+			children = (
+				D3A6907E18EBF1BF000029B8 /* WYVideoPlayerTests.m */,
+				D3A6907918EBF1BF000029B8 /* Supporting Files */,
+			);
+			path = WYVideoPlayerTests;
+			sourceTree = "<group>";
+		};
+		D3A6907918EBF1BF000029B8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D3A6907A18EBF1BF000029B8 /* WYVideoPlayerTests-Info.plist */,
+				D3A6907B18EBF1BF000029B8 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D3A6904F18EBF1BF000029B8 /* WYVideoPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3A6908218EBF1BF000029B8 /* Build configuration list for PBXNativeTarget "WYVideoPlayer" */;
+			buildPhases = (
+				D3A6904C18EBF1BF000029B8 /* Sources */,
+				D3A6904D18EBF1BF000029B8 /* Frameworks */,
+				D3A6904E18EBF1BF000029B8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WYVideoPlayer;
+			productName = WYVideoPlayer;
+			productReference = D3A6905018EBF1BF000029B8 /* WYVideoPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D3A6907018EBF1BF000029B8 /* WYVideoPlayerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3A6908518EBF1BF000029B8 /* Build configuration list for PBXNativeTarget "WYVideoPlayerTests" */;
+			buildPhases = (
+				D3A6906D18EBF1BF000029B8 /* Sources */,
+				D3A6906E18EBF1BF000029B8 /* Frameworks */,
+				D3A6906F18EBF1BF000029B8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3A6907718EBF1BF000029B8 /* PBXTargetDependency */,
+			);
+			name = WYVideoPlayerTests;
+			productName = WYVideoPlayerTests;
+			productReference = D3A6907118EBF1BF000029B8 /* WYVideoPlayerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D3A6904818EBF1BF000029B8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = WY;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = com.wy;
+				TargetAttributes = {
+					D3A6907018EBF1BF000029B8 = {
+						TestTargetID = D3A6904F18EBF1BF000029B8;
+					};
+				};
+			};
+			buildConfigurationList = D3A6904B18EBF1BF000029B8 /* Build configuration list for PBXProject "WYVideoPlayer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D3A6904718EBF1BF000029B8;
+			productRefGroup = D3A6905118EBF1BF000029B8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D3A6904F18EBF1BF000029B8 /* WYVideoPlayer */,
+				D3A6907018EBF1BF000029B8 /* WYVideoPlayerTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D3A6904E18EBF1BF000029B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3A6906C18EBF1BF000029B8 /* Images.xcassets in Resources */,
+				D3A6905E18EBF1BF000029B8 /* InfoPlist.strings in Resources */,
+				D3A6906718EBF1BF000029B8 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3A6906F18EBF1BF000029B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3A6907D18EBF1BF000029B8 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D3A6904C18EBF1BF000029B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3A6909018EBF21A000029B8 /* UIView+Utils.m in Sources */,
+				D3A6906418EBF1BF000029B8 /* WYAppDelegate.m in Sources */,
+				D3A6908C18EBF1E0000029B8 /* WYMoviePlayerController.m in Sources */,
+				D3A6906018EBF1BF000029B8 /* main.m in Sources */,
+				D3A6908D18EBF1E0000029B8 /* WYVidoePlayerView.m in Sources */,
+				D3A6906A18EBF1BF000029B8 /* WYViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3A6906D18EBF1BF000029B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3A6907F18EBF1BF000029B8 /* WYVideoPlayerTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D3A6907718EBF1BF000029B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3A6904F18EBF1BF000029B8 /* WYVideoPlayer */;
+			targetProxy = D3A6907618EBF1BF000029B8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D3A6905C18EBF1BF000029B8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3A6905D18EBF1BF000029B8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D3A6906518EBF1BF000029B8 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3A6906618EBF1BF000029B8 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		D3A6907B18EBF1BF000029B8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3A6907C18EBF1BF000029B8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D3A6908018EBF1BF000029B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D3A6908118EBF1BF000029B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D3A6908318EBF1BF000029B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WYVideoPlayer/WYVideoPlayer-Prefix.pch";
+				INFOPLIST_FILE = "WYVideoPlayer/WYVideoPlayer-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D3A6908418EBF1BF000029B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WYVideoPlayer/WYVideoPlayer-Prefix.pch";
+				INFOPLIST_FILE = "WYVideoPlayer/WYVideoPlayer-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		D3A6908618EBF1BF000029B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/WYVideoPlayer.app/WYVideoPlayer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WYVideoPlayer/WYVideoPlayer-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "WYVideoPlayerTests/WYVideoPlayerTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		D3A6908718EBF1BF000029B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/WYVideoPlayer.app/WYVideoPlayer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WYVideoPlayer/WYVideoPlayer-Prefix.pch";
+				INFOPLIST_FILE = "WYVideoPlayerTests/WYVideoPlayerTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D3A6904B18EBF1BF000029B8 /* Build configuration list for PBXProject "WYVideoPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3A6908018EBF1BF000029B8 /* Debug */,
+				D3A6908118EBF1BF000029B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3A6908218EBF1BF000029B8 /* Build configuration list for PBXNativeTarget "WYVideoPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3A6908318EBF1BF000029B8 /* Debug */,
+				D3A6908418EBF1BF000029B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		D3A6908518EBF1BF000029B8 /* Build configuration list for PBXNativeTarget "WYVideoPlayerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3A6908618EBF1BF000029B8 /* Debug */,
+				D3A6908718EBF1BF000029B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D3A6904818EBF1BF000029B8 /* Project object */;
+}
