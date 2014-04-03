@@ -19,6 +19,7 @@ static const NSString *ItemStatusContext;
     UISlider *slideBar;
     UIButton *fullScreenButton;
     
+    CGPoint playerOrigin;
 }
 @end
 // TODO: 在视频加载时，应该有一个默认图片显示，并且有一个小圈在转
@@ -26,38 +27,38 @@ static const NSString *ItemStatusContext;
 
 - (void)loadAssetFromFile{
     
-    NSURL *url = [NSURL URLWithString:@"http://v.yingshibao.chuanke.com/cet4/CET4_listening_video/1_Zongshu/001_zongshu.mp4"];
-    
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-    NSString *tracksKey = @"tracks";
-    
-    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler:
-     ^{
-         // Completion handler block.
-         dispatch_async(dispatch_get_main_queue(),
-                        ^{
-                            NSError *error;
-                            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
-                            
-                            if (status == AVKeyValueStatusLoaded) {
-                                self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
-                                // ensure that this is done before the playerItem is associated with the player
-                                [self.playerItem addObserver:self forKeyPath:@"status"
-                                                     options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
-                                [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                         selector:@selector(playerItemDidReachEnd:)
-                                                                             name:AVPlayerItemDidPlayToEndTimeNotification
-                                                                           object:self.playerItem];
-                                self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
-                                [self.playerView setPlayer:self.player];
-                            }
-                            else {
-                                // You should deal with the error appropriately.
-                                NSLog(@"The asset's tracks were not loaded:\n%@", [error localizedDescription]);
-                            }
-                        });
-
-     }];
+//    NSURL *url = [NSURL URLWithString:@"http://v.yingshibao.chuanke.com/cet4/CET4_listening_video/1_Zongshu/001_zongshu.mp4"];
+//    
+//    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+//    NSString *tracksKey = @"tracks";
+//    
+//    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler:
+//     ^{
+//         // Completion handler block.
+//         dispatch_async(dispatch_get_main_queue(),
+//                        ^{
+//                            NSError *error;
+//                            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
+//                            
+//                            if (status == AVKeyValueStatusLoaded) {
+//                                self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
+//                                // ensure that this is done before the playerItem is associated with the player
+//                                [self.playerItem addObserver:self forKeyPath:@"status"
+//                                                     options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
+//                                [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                                         selector:@selector(playerItemDidReachEnd:)
+//                                                                             name:AVPlayerItemDidPlayToEndTimeNotification
+//                                                                           object:self.playerItem];
+//                                self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
+//                                [self.playerView setPlayer:self.player];
+//                            }
+//                            else {
+//                                // You should deal with the error appropriately.
+//                                NSLog(@"The asset's tracks were not loaded:\n%@", [error localizedDescription]);
+//                            }
+//                        });
+//
+//     }];
 }
 
 - (IBAction)play:sender
@@ -72,8 +73,10 @@ static const NSString *ItemStatusContext;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.navigationController.navigationBarHidden = YES;
     [self loadAssetFromFile];
     [self syncUI];
+    playerOrigin = _playerView.origin;
     
 }
 
@@ -133,24 +136,25 @@ static const NSString *ItemStatusContext;
 
     }else{
         // setStatusBarOrientation 在文档里有说明，如果由设备来管理旋转，该方法不好使（not working）。所以shouldAutorotate应该返回NO，意思完全交由我们自己管理，同时要注意到shouldAutorotate是在ios6以后有的方法
-        
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
+        
         [UIView animateWithDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration animations:^{
             
-            CGAffineTransform transform = CGAffineTransformMakeRotation(M_PI_2);
-            
+            // 将center移动到屏幕的中间
             float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
-            float devicewidth = [[UIScreen mainScreen] bounds].size.width;
-            float heightScale = devicewidth / _playerView.height;
-            float widthScale = deviceHeight / _playerView.width;
+            float deviceWidth = [[UIScreen mainScreen] bounds].size.width;
+            CGPoint deviceCenter = CGPointMake(deviceWidth/2 , deviceHeight /2);
+            CGPoint playerCenter = _playerView.center;
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(deviceCenter.x - playerCenter.x, deviceCenter.y - playerCenter.y);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
             
+            float heightScale = deviceWidth / _playerView.height;
+            float widthScale = deviceHeight / _playerView.width;
             transform = CGAffineTransformScale(transform, widthScale, heightScale);
-            // TODO: 如果player view的坐标是 (30, 40)，那么在全屏后，player view必须做一个Translate，下面这个translate不对，需要修改
-            transform = CGAffineTransformTranslate(transform, -_playerView.left, -_playerView.top);
+            
+
             _playerView.transform = transform;
 
-        } completion:^(BOOL finished) {
-            
         }];
 
     }
