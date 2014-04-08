@@ -19,46 +19,47 @@ static const NSString *ItemStatusContext;
     UISlider *slideBar;
     UIButton *fullScreenButton;
     
-    CGPoint playerOrigin;
+    CGPoint playerOriginalCenter;
+    CGRect playerOriginalBounds;
 }
 @end
 // TODO: 在视频加载时，应该有一个默认图片显示，并且有一个小圈在转
 @implementation WYMoviePlayerController
 
 - (void)loadAssetFromFile{
+    //
+//    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    NSURL *url = [NSURL URLWithString:@"http://v.yingshibao.chuanke.com/cet4/CET4_listening_video/1_Zongshu/001_zongshu.mp4"];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+    NSString *tracksKey = @"tracks";
     
-//    NSURL *url = [NSURL URLWithString:@"http://v.yingshibao.chuanke.com/cet4/CET4_listening_video/1_Zongshu/001_zongshu.mp4"];
-//    
-//    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-//    NSString *tracksKey = @"tracks";
-//    
-//    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler:
-//     ^{
-//         // Completion handler block.
-//         dispatch_async(dispatch_get_main_queue(),
-//                        ^{
-//                            NSError *error;
-//                            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
-//                            
-//                            if (status == AVKeyValueStatusLoaded) {
-//                                self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
-//                                // ensure that this is done before the playerItem is associated with the player
-//                                [self.playerItem addObserver:self forKeyPath:@"status"
-//                                                     options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
-//                                [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                                         selector:@selector(playerItemDidReachEnd:)
-//                                                                             name:AVPlayerItemDidPlayToEndTimeNotification
-//                                                                           object:self.playerItem];
-//                                self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
-//                                [self.playerView setPlayer:self.player];
-//                            }
-//                            else {
-//                                // You should deal with the error appropriately.
-//                                NSLog(@"The asset's tracks were not loaded:\n%@", [error localizedDescription]);
-//                            }
-//                        });
-//
-//     }];
+    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler:
+     ^{
+         // Completion handler block.
+         dispatch_async(dispatch_get_main_queue(),
+                        ^{
+                            NSError *error;
+                            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
+                            
+                            if (status == AVKeyValueStatusLoaded) {
+                                self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
+                                // ensure that this is done before the playerItem is associated with the player
+                                [self.playerItem addObserver:self forKeyPath:@"status"
+                                                     options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
+                                [[NSNotificationCenter defaultCenter] addObserver:self
+                                                                         selector:@selector(playerItemDidReachEnd:)
+                                                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                                                           object:self.playerItem];
+                                self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
+                                [self.playerView setPlayer:self.player];
+                            }
+                            else {
+                                // You should deal with the error appropriately.
+                                NSLog(@"The asset's tracks were not loaded:\n%@", [error localizedDescription]);
+                            }
+                        });
+
+     }];
 }
 
 - (IBAction)play:sender
@@ -76,7 +77,8 @@ static const NSString *ItemStatusContext;
     self.navigationController.navigationBarHidden = YES;
     [self loadAssetFromFile];
     [self syncUI];
-    playerOrigin = _playerView.origin;
+    playerOriginalBounds = _playerView.bounds;
+    playerOriginalCenter = _playerView.center;
     
 }
 
@@ -132,6 +134,8 @@ static const NSString *ItemStatusContext;
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:YES];
         [UIView animateWithDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration animations:^{
             _playerView.transform = CGAffineTransformIdentity;
+            _playerView.center = playerOriginalCenter;
+            _playerView.bounds = playerOriginalBounds;
         }];
 
     }else{
@@ -143,17 +147,11 @@ static const NSString *ItemStatusContext;
             // 将center移动到屏幕的中间
             float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
             float deviceWidth = [[UIScreen mainScreen] bounds].size.width;
-            CGPoint deviceCenter = CGPointMake(deviceWidth/2 , deviceHeight /2);
-            CGPoint playerCenter = _playerView.center;
-            CGAffineTransform transform = CGAffineTransformMakeTranslation(deviceCenter.x - playerCenter.x, deviceCenter.y - playerCenter.y);
-            transform = CGAffineTransformRotate(transform, M_PI_2);
-            
-            float heightScale = deviceWidth / _playerView.height;
-            float widthScale = deviceHeight / _playerView.width;
-            transform = CGAffineTransformScale(transform, widthScale, heightScale);
-            
 
-            _playerView.transform = transform;
+            _playerView.bounds = CGRectMake(0, 0, deviceHeight, deviceWidth);
+            _playerView.center = CGPointMake(deviceWidth/2, deviceHeight/2);
+
+            _playerView.transform = CGAffineTransformMakeRotation(M_PI_2);
 
         }];
 
