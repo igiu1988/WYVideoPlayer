@@ -15,7 +15,7 @@
 @class WYVidoePlayerView;
 @interface WYMoviePlayerController : UIViewController
 @property (nonatomic) AVPlayer *player;
-@property (nonatomic) AVPlayerItem *playerItem;
+
 @property (nonatomic, weak) IBOutlet WYVidoePlayerView *playerView;
 @property (nonatomic, weak) IBOutlet UIButton *playButton;
 

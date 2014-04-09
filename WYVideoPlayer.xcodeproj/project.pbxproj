@@ -24,6 +24,7 @@
 		D3A6908C18EBF1E0000029B8 /* WYMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */; };
 		D3A6908D18EBF1E0000029B8 /* WYVidoePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */; };
 		D3A6909018EBF21A000029B8 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908F18EBF21A000029B8 /* UIView+Utils.m */; };
+		D3D5E91918F4D7FF0096D3B6 /* TODO.md in Resources */ = {isa = PBXBuildFile; fileRef = D3D5E91818F4D7FF0096D3B6 /* TODO.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYVidoePlayerView.m; sourceTree = "<group>"; };
 		D3A6908E18EBF21A000029B8 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		D3A6908F18EBF21A000029B8 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
+		D3D5E91818F4D7FF0096D3B6 /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 		D3A6904718EBF1BF000029B8 = {
 			isa = PBXGroup;
 			children = (
+				D3D5E91818F4D7FF0096D3B6 /* TODO.md */,
 				D3A6905918EBF1BF000029B8 /* WYVideoPlayer */,
 				D3A6907818EBF1BF000029B8 /* WYVideoPlayerTests */,
 				D3A6905218EBF1BF000029B8 /* Frameworks */,
@@ -244,6 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3D5E91918F4D7FF0096D3B6 /* TODO.md in Resources */,
 				D3A6906C18EBF1BF000029B8 /* Images.xcassets in Resources */,
 				D3A6905E18EBF1BF000029B8 /* InfoPlist.strings in Resources */,
 				D3A6906718EBF1BF000029B8 /* Main.storyboard in Resources */,
@@ -477,6 +481,7 @@
 				D3A6908418EBF1BF000029B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D3A6908518EBF1BF000029B8 /* Build configuration list for PBXNativeTarget "WYVideoPlayerTests" */ = {
 			isa = XCConfigurationList;
@@ -485,6 +490,7 @@
 				D3A6908718EBF1BF000029B8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

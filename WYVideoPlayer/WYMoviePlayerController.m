@@ -9,14 +9,14 @@
 #import "WYMoviePlayerController.h"
 #import "WYVidoePlayerView.h"
 
-// Define this constant for the key-value observation context.
-static const NSString *ItemStatusContext;
+
 
 @interface WYMoviePlayerController () <UIGestureRecognizerDelegate>
 {
     UIView *controlBar;
 //    UIButton *playButton;
-    UISlider *slideBar;
+    __weak IBOutlet UISlider *slider;
+    
     UIButton *fullScreenButton;
     
     CGPoint playerOriginalCenter;
@@ -26,90 +26,48 @@ static const NSString *ItemStatusContext;
 // TODO: 在视频加载时，应该有一个默认图片显示，并且有一个小圈在转
 @implementation WYMoviePlayerController
 
-- (void)loadAssetFromFile{
-    //
-//    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-    NSURL *url = [NSURL URLWithString:@"http://v.yingshibao.chuanke.com/cet4/CET4_listening_video/1_Zongshu/001_zongshu.mp4"];
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-    NSString *tracksKey = @"tracks";
-    
-    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler:
-     ^{
-         // Completion handler block.
-         dispatch_async(dispatch_get_main_queue(),
-                        ^{
-                            NSError *error;
-                            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
-                            
-                            if (status == AVKeyValueStatusLoaded) {
-                                self.playerItem = [AVPlayerItem playerItemWithAsset:asset];
-                                // ensure that this is done before the playerItem is associated with the player
-                                [self.playerItem addObserver:self forKeyPath:@"status"
-                                                     options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
-                                [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                         selector:@selector(playerItemDidReachEnd:)
-                                                                             name:AVPlayerItemDidPlayToEndTimeNotification
-                                                                           object:self.playerItem];
-                                self.player = [AVPlayer playerWithPlayerItem:self.playerItem];
-                                [self.playerView setPlayer:self.player];
-                            }
-                            else {
-                                // You should deal with the error appropriately.
-                                NSLog(@"The asset's tracks were not loaded:\n%@", [error localizedDescription]);
-                            }
-                        });
-
-     }];
-}
-
-- (IBAction)play:sender
-{
-    if (self.player.rate == 0) {
-        [self.player play];
-    }else{
-        [self.player pause];
-    }
-    
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
-    [self loadAssetFromFile];
-    [self syncUI];
+    
+    [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVidoePlayerView *playerView) {
+        if (status == AVPlayerItemStatusReadyToPlay) {
+            slider.maximumValue = playerView.duration;
+            self.playButton.enabled = YES;
+        }else{
+            self.playButton.enabled = NO;
+        }
+    }];
+    
+    [self.playerView setCurrentTimeUpdateBlock:^(float currentTime, WYVidoePlayerView *playerView) {
+        slider.value = currentTime;
+    }];
+
+//    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, WYVidoePlayerView *playerView) {
+//        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+//            
+//            [UIView animateWithDuration:animationDuration animations:^{
+//                slider.center = CGPointMake(slider.width/2, 0);
+//                float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
+//                slider.bounds = CGRectMake(0, 0, deviceHeight, slider.height);
+//                slider.transform = CGAffineTransformMakeRotation(M_PI_2);
+//            }];
+//        }else{
+//            [UIView animateWithDuration:animationDuration animations:^{
+//                slider.center = CGPointMake(slider.width/2, 0);
+//                float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
+//                slider.bounds = CGRectMake(0, 0, deviceHeight, slider.height);
+//                slider.transform = CGAffineTransformMakeRotation(M_PI_2);
+//            }];
+//        }
+//    }];
+    
     playerOriginalBounds = _playerView.bounds;
     playerOriginalCenter = _playerView.center;
     
 }
 
-- (void)syncUI {
-    if ((self.player.currentItem != nil) &&
-        ([self.player.currentItem status] == AVPlayerItemStatusReadyToPlay)) {
-        self.playButton.enabled = YES;
-    }
-    else {
-        self.playButton.enabled = NO;
-    }
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-                        change:(NSDictionary *)change context:(void *)context {
-    
-    if (context == &ItemStatusContext) {
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           [self syncUI];
-                       });
-        return;
-    }
-    [super observeValueForKeyPath:keyPath ofObject:object
-                           change:change context:context];
-    return;
-}
-
-- (void)playerItemDidReachEnd:(NSNotification *)notification {
-    [self.player seekToTime:kCMTimeZero];
-}
 
 #pragma mark - 旋转、全屏控制
 
@@ -127,37 +85,21 @@ static const NSString *ItemStatusContext;
 }
 
 - (IBAction)fullScreenAction:(id)sender {
-    
-    // 旋转 status bar
-    // 旋转 palyer 并正确设置 player size
-    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:YES];
-        [UIView animateWithDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration animations:^{
-            _playerView.transform = CGAffineTransformIdentity;
-            _playerView.center = playerOriginalCenter;
-            _playerView.bounds = playerOriginalBounds;
-        }];
+    [_playerView fullScreen];
+}
 
+- (IBAction)play:sender
+{
+//    if (self.player.rate == 0) {
+//        [self.player play];
+//    }else{
+//        [self.player pause];
+//    }
+    if (_playerView.rate == 0) {
+        [_playerView play];
     }else{
-        // setStatusBarOrientation 在文档里有说明，如果由设备来管理旋转，该方法不好使（not working）。所以shouldAutorotate应该返回NO，意思完全交由我们自己管理，同时要注意到shouldAutorotate是在ios6以后有的方法
-        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
-        
-        [UIView animateWithDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration animations:^{
-            
-            // 将center移动到屏幕的中间
-            float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
-            float deviceWidth = [[UIScreen mainScreen] bounds].size.width;
-
-            _playerView.bounds = CGRectMake(0, 0, deviceHeight, deviceWidth);
-            _playerView.center = CGPointMake(deviceWidth/2, deviceHeight/2);
-
-            _playerView.transform = CGAffineTransformMakeRotation(M_PI_2);
-
-        }];
-
+        [_playerView pause];
     }
-
-    
 }
 
 @end

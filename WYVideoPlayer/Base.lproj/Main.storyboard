@@ -16,6 +16,12 @@
                             <view contentMode="scaleToFill" id="54N-Yu-VZB" customClass="WYVidoePlayerView">
                                 <rect key="frame" x="0.0" y="98" width="320" height="200"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" id="ArV-5h-2QW">
+                                        <rect key="frame" x="-2" y="169" width="324" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                    </slider>
+                                </subviews>
                                 <color key="backgroundColor" red="0.26956493399999998" green="1" blue="0.52420190560000002" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="CJg-ZO-c2L">
@@ -28,8 +34,8 @@
                                     <action selector="fullScreenAction:" destination="rDn-rE-FCM" eventType="touchUpInside" id="FzC-3v-Qj0"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="SHL-fP-Dam">
-                                <rect key="frame" x="85" y="448" width="120" height="59"/>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="SHL-fP-Dam">
+                                <rect key="frame" x="85" y="436" width="120" height="59"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="播放">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -46,6 +52,7 @@
                     <connections>
                         <outlet property="playButton" destination="SHL-fP-Dam" id="Nub-qu-9uh"/>
                         <outlet property="playerView" destination="54N-Yu-VZB" id="rn1-tt-omr"/>
+                        <outlet property="slider" destination="ArV-5h-2QW" id="lZ2-F4-Pr4"/>
                         <outlet property="view" destination="pht-IG-HUl" id="4I0-kz-ISL"/>
                     </connections>
                 </viewController>
