@@ -14,8 +14,9 @@
 @interface WYMoviePlayerController () <UIGestureRecognizerDelegate>
 {
     UIView *controlBar;
-//    UIButton *playButton;
+    __weak IBOutlet UIButton *playButton;
     __weak IBOutlet UISlider *slider;
+    __weak IBOutlet UILabel *currentTimeLabel;
     
     UIButton *fullScreenButton;
     
@@ -31,37 +32,37 @@
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     
+    [slider setMaximumTrackImage:[UIImage imageNamed:@"播放进度条"] forState:UIControlStateNormal];
+    [slider setMinimumTrackImage:[UIImage imageNamed:@"缓存条"] forState:UIControlStateNormal];
+    [slider setThumbImage:[UIImage imageNamed:@"播放拖动钮"] forState:UIControlStateNormal];
+    
     [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVidoePlayerView *playerView) {
         if (status == AVPlayerItemStatusReadyToPlay) {
             slider.maximumValue = playerView.duration;
-            self.playButton.enabled = YES;
+            playButton.enabled = YES;
         }else{
-            self.playButton.enabled = NO;
+            playButton.enabled = NO;
         }
     }];
     
-    [self.playerView setCurrentTimeUpdateBlock:^(float currentTime, WYVidoePlayerView *playerView) {
+    [self.playerView setCurrentTimeUpdateBlock:^(int64_t currentTime, WYVidoePlayerView *playerView) {
         slider.value = currentTime;
+        currentTimeLabel.text = [NSString stringWithFormat:@"%lld/%lld", currentTime, playerView.duration];
     }];
 
-//    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, WYVidoePlayerView *playerView) {
-//        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-//            
-//            [UIView animateWithDuration:animationDuration animations:^{
-//                slider.center = CGPointMake(slider.width/2, 0);
-//                float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
-//                slider.bounds = CGRectMake(0, 0, deviceHeight, slider.height);
-//                slider.transform = CGAffineTransformMakeRotation(M_PI_2);
-//            }];
-//        }else{
-//            [UIView animateWithDuration:animationDuration animations:^{
-//                slider.center = CGPointMake(slider.width/2, 0);
-//                float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
-//                slider.bounds = CGRectMake(0, 0, deviceHeight, slider.height);
-//                slider.transform = CGAffineTransformMakeRotation(M_PI_2);
-//            }];
-//        }
-//    }];
+    
+    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, WYVidoePlayerView *playerView) {
+        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+            
+            [UIView animateWithDuration:animationDuration animations:^{
+                
+            }];
+        }else{
+            [UIView animateWithDuration:animationDuration animations:^{
+            
+            }];
+        }
+    }];
     
     playerOriginalBounds = _playerView.bounds;
     playerOriginalCenter = _playerView.center;
@@ -69,9 +70,25 @@
 }
 
 
-#pragma mark - 旋转、全屏控制
+#pragma mark - 控制
+- (IBAction)fullScreenAction:(id)sender {
+    [_playerView fullScreen];
+}
 
+- (IBAction)play:sender
+{
+    if (_playerView.rate == 0) {
+        [_playerView play];
+    }else{
+        [_playerView pause];
+    }
+}
+- (IBAction)popAction:(id)sender {
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
+#pragma mark - 旋转
 /*
  TODO:
  1. 搜狐视频只是把单独一个player横了过来。(这个我已经做到)
@@ -83,23 +100,24 @@
 {
     return NO;
 }
+@end
 
-- (IBAction)fullScreenAction:(id)sender {
-    [_playerView fullScreen];
-}
 
-- (IBAction)play:sender
+// 反正状态栏能不能旋转，要看这个viewcontroller在不在UINavigationController。如果在，那么就要像下面这样，如何不在，直接旋转状态栏就可以
+@implementation UINavigationController (Rotation)
+- (BOOL)shouldAutorotate
 {
-//    if (self.player.rate == 0) {
-//        [self.player play];
-//    }else{
-//        [self.player pause];
-//    }
-    if (_playerView.rate == 0) {
-        [_playerView play];
-    }else{
-        [_playerView pause];
-    }
+    return [[self.viewControllers lastObject] shouldAutorotate];
 }
 
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return [[self.viewControllers lastObject] supportedInterfaceOrientations];
+}
+
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return [[self.viewControllers lastObject] preferredInterfaceOrientationForPresentation];
+}
 @end

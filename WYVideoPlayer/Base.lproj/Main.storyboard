@@ -1,11 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="rDn-rE-FCM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="nfn-ak-sx4">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
-        <!--Movie Player Controller-->
+        <!--Table View Controller - Root View Controller-->
+        <scene sceneID="GVw-Qg-GvH">
+            <objects>
+                <tableViewController id="fzs-E9-qVS" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="gLt-Cz-5Zl">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <sections>
+                            <tableViewSection id="Fws-Yj-iZ9">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="eYc-Gv-GcM" style="IBUITableViewCellStyleDefault" id="hq9-rD-iZM">
+                                        <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hq9-rD-iZM" id="3E7-Gq-4dO">
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="像搜狐视频那样" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="eYc-Gv-GcM">
+                                                    <rect key="frame" x="15" y="0.0" width="270" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="rDn-rE-FCM" kind="push" id="TON-c7-boW"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="fzs-E9-qVS" id="Jh8-ab-hdH"/>
+                            <outlet property="delegate" destination="fzs-E9-qVS" id="mGs-Pd-2rk"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="zV6-8a-n5a"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Lk-Cx-8OF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="13" y="223"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="y2Z-yX-TNR">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="nfn-ak-sx4" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="eeh-Sf-Coh">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="fzs-E9-qVS" kind="relationship" relationship="rootViewController" id="psb-d9-sct"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Ou-b4-UgF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-521" y="223"/>
+        </scene>
+        <!--Movie Player Controller - 视频-->
         <scene sceneID="gfW-r4-pYP">
             <objects>
                 <viewController id="rDn-rE-FCM" customClass="WYMoviePlayerController" sceneMemberID="viewController">
@@ -14,18 +74,42 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="54N-Yu-VZB" customClass="WYVidoePlayerView">
-                                <rect key="frame" x="0.0" y="98" width="320" height="200"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" id="ArV-5h-2QW">
-                                        <rect key="frame" x="-2" y="169" width="324" height="31"/>
+                                        <rect key="frame" x="50" y="170" width="231" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                     </slider>
+                                    <view contentMode="scaleToFill" id="55f-U2-GHs">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ykt-sS-u1z">
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="35"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="返回箭头.png">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="popAction:" destination="rDn-rE-FCM" eventType="touchUpInside" id="7Xa-7P-3rr"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bh1-e5-Q34">
+                                                <rect key="frame" x="280" y="0.0" width="40" height="35"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="下载按钮.png">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.46283083545918369" green="0.46283083545918369" blue="0.46283083545918369" alpha="0.28999999999999998" colorSpace="calibratedRGB"/>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.26956493399999998" green="1" blue="0.52420190560000002" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="CJg-ZO-c2L">
-                                <rect key="frame" x="85" y="329" width="120" height="70"/>
+                                <rect key="frame" x="20" y="322" width="120" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="全屏">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -35,7 +119,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="SHL-fP-Dam">
-                                <rect key="frame" x="85" y="436" width="120" height="59"/>
+                                <rect key="frame" x="20" y="370" width="120" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="播放">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -44,12 +128,20 @@
                                     <action selector="play:" destination="rDn-rE-FCM" eventType="touchUpInside" id="wjj-dk-82Z"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="当前/总时" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ye0-KU-oCJ">
+                                <rect key="frame" x="20" y="415" width="120" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.18431372940540314" green="0.4745098352432251" blue="0.81568634510040283" alpha="1" colorSpace="deviceRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <color key="tintColor" red="0.1489864588" green="0.4663141348" blue="0.84867527170000001" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
-                    <navigationItem key="navigationItem" id="elA-Fn-frc"/>
+                    <navigationItem key="navigationItem" title="视频" id="elA-Fn-frc"/>
                     <connections>
+                        <outlet property="currentTimeLabel" destination="ye0-KU-oCJ" id="AEn-QI-j5f"/>
                         <outlet property="playButton" destination="SHL-fP-Dam" id="Nub-qu-9uh"/>
                         <outlet property="playerView" destination="54N-Yu-VZB" id="rn1-tt-omr"/>
                         <outlet property="slider" destination="ArV-5h-2QW" id="lZ2-F4-Pr4"/>
@@ -58,9 +150,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7MK-55-4fz" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="243" y="134"/>
+            <point key="canvasLocation" x="406" y="235"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="下载按钮.png" width="25" height="25"/>
+        <image name="返回箭头.png" width="18" height="12"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

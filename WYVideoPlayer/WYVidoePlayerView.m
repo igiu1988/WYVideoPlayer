@@ -17,9 +17,9 @@
     
     
     void (^playerItemStatusChangeBlock)(AVPlayerItemStatus status, WYVidoePlayerView *playerView);
-    void(^currentTimeUpdateBlock)(float currentTime, WYVidoePlayerView *playerView);
+    void(^currentTimeUpdateBlock)(int64_t currentTime, WYVidoePlayerView *playerView);
     void(^orientationWillChangeBlock)(float animationDuration, WYVidoePlayerView *playerView);
-    
+    void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVidoePlayerView *playerView);
     id periodicTimeObserver;
 }
 
@@ -28,7 +28,8 @@
 
 // Define this constant for the key-value observation context.
 static const NSString *ItemStatusContext;
-
+static const NSString *ItemLoadedTimeContext;
+static const NSString *AssetDurationContext;
 @implementation WYVidoePlayerView
 
 #pragma mark - 初始化
@@ -89,6 +90,12 @@ static const NSString *ItemStatusContext;
 {
     [player pause];
 }
+
+- (void)stop
+{
+    [player removeTimeObserver:periodicTimeObserver];
+    player = nil;
+}
 - (void)fullScreen{
     
     // 旋转 status bar
@@ -121,12 +128,14 @@ static const NSString *ItemStatusContext;
     }
 }
 
+#pragma mark - Block
+
 - (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVidoePlayerView *playerView))block
 {
     playerItemStatusChangeBlock = block;
 }
 
-- (void)setCurrentTimeUpdateBlock:(void(^)(float currentTime, WYVidoePlayerView *playerView))block
+- (void)setCurrentTimeUpdateBlock:(void(^)(int64_t currentTime, WYVidoePlayerView *playerView))block
 {
     currentTimeUpdateBlock = block;
 }
@@ -135,14 +144,19 @@ static const NSString *ItemStatusContext;
 {
     orientationWillChangeBlock = block;
 }
+
+- (void)setLoadedTimeUpdateBlock:(void(^)(int64_t loadTime, WYVidoePlayerView *playerView))block
+{
+    loadedTimeUpdateBlock = block;
+}
 #pragma mark - 视频载入
 - (void)loadAssetFromFile{
     
     //代码公开时，要使用这个视频地址
-//    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     
-    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/IMG_0313.MOV"];
-    NSURL *url = [NSURL fileURLWithPath:path];
+//    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/IMG_0313.MOV"];
+//    NSURL *url = [NSURL fileURLWithPath:path];
     
     
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
@@ -158,14 +172,20 @@ static const NSString *ItemStatusContext;
                             
                             if (status == AVKeyValueStatusLoaded) {
                                 // 媒体总时长
-                                _duration = asset.duration.value/asset.duration.timescale;
-                                playerItem = [AVPlayerItem playerItemWithAsset:asset];
                                 
+                                playerItem = [AVPlayerItem playerItemWithAsset:asset];
                                 // ensure that this is done before the playerItem is associated with the player
                                 [playerItem addObserver:self forKeyPath:@"status"
-                                                     options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
+                                                options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
+                                [playerItem addObserver:self forKeyPath:@"loadedTimeRanges"
+                                                options:NSKeyValueObservingOptionNew context:&ItemLoadedTimeContext];
+                                [playerItem addObserver:self forKeyPath:@"duration"
+                                                options:NSKeyValueObservingOptionNew context:&AssetDurationContext];
+                                [playerItem addObserver:self forKeyPath:@"timedMetadata"
+                                                options:NSKeyValueObservingOptionNew context:&AssetDurationContext];
                                 
                                 // 播放结束时的通知
+                                
                                 [[NSNotificationCenter defaultCenter] addObserver:self
                                                                          selector:@selector(playerItemDidReachEnd:)
                                                                              name:AVPlayerItemDidPlayToEndTimeNotification
@@ -173,10 +193,12 @@ static const NSString *ItemStatusContext;
                                 player = [AVPlayer playerWithPlayerItem:playerItem];
                                 [self setPlayer:player];
                                 
+                                
+                                
                                 // 每0.1秒更新一次
                                 periodicTimeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
                                     if (currentTimeUpdateBlock) {
-                                        currentTimeUpdateBlock((float)(time.value)/time.timescale, self);
+                                        currentTimeUpdateBlock((time.value)/time.timescale, self);
                                     }
                                 }];
                                 
@@ -202,6 +224,23 @@ static const NSString *ItemStatusContext;
                            }
                        });
         
+        return;
+    }else if (context == &ItemLoadedTimeContext){
+        NSArray *loadedTimeRanges = [[self.player currentItem] loadedTimeRanges];
+        CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
+        float startSeconds = CMTimeGetSeconds(timeRange.start);
+        float durationSeconds = CMTimeGetSeconds(timeRange.duration);
+        NSTimeInterval result = startSeconds + durationSeconds;
+        if (loadedTimeUpdateBlock) {
+            loadedTimeUpdateBlock(result, self);
+        }
+        
+        return;
+    }else if (context == &AssetDurationContext){
+        _duration = playerItem.duration.value/playerItem.duration.timescale;
+        if (currentTimeUpdateBlock) {
+            currentTimeUpdateBlock(0, self);
+        }
         return;
     }
     [super observeValueForKeyPath:keyPath ofObject:object

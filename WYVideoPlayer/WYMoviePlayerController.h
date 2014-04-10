@@ -17,6 +17,6 @@
 @property (nonatomic) AVPlayer *player;
 
 @property (nonatomic, weak) IBOutlet WYVidoePlayerView *playerView;
-@property (nonatomic, weak) IBOutlet UIButton *playButton;
+
 
 @end
