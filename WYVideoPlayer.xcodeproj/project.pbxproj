@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D386685A18F7AE0100517FF8 /* WYTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D386685918F7AE0100517FF8 /* WYTableViewController.m */; };
 		D3979CE118F68804004B2A12 /* videoPlay.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCB18F68804004B2A12 /* videoPlay.png */; };
 		D3979CE218F68804004B2A12 /* videoPlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCC18F68804004B2A12 /* videoPlay@2x.png */; };
 		D3979CE318F68804004B2A12 /* 下载按钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCD18F68804004B2A12 /* 下载按钮.png */; };
@@ -62,6 +63,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D386685818F7AE0100517FF8 /* WYTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYTableViewController.h; sourceTree = "<group>"; };
+		D386685918F7AE0100517FF8 /* WYTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYTableViewController.m; sourceTree = "<group>"; };
 		D3979CCB18F68804004B2A12 /* videoPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = videoPlay.png; sourceTree = "<group>"; };
 		D3979CCC18F68804004B2A12 /* videoPlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoPlay@2x.png"; sourceTree = "<group>"; };
 		D3979CCD18F68804004B2A12 /* 下载按钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下载按钮.png"; sourceTree = "<group>"; };
@@ -209,6 +212,8 @@
 				D3A6908F18EBF21A000029B8 /* UIView+Utils.m */,
 				D3A6906218EBF1BF000029B8 /* WYAppDelegate.h */,
 				D3A6906318EBF1BF000029B8 /* WYAppDelegate.m */,
+				D386685818F7AE0100517FF8 /* WYTableViewController.h */,
+				D386685918F7AE0100517FF8 /* WYTableViewController.m */,
 				D3A6906518EBF1BF000029B8 /* Main.storyboard */,
 				D3A6906818EBF1BF000029B8 /* WYViewController.h */,
 				D3A6906918EBF1BF000029B8 /* WYViewController.m */,
@@ -378,6 +383,7 @@
 				D3A6906418EBF1BF000029B8 /* WYAppDelegate.m in Sources */,
 				D3A6908C18EBF1E0000029B8 /* WYMoviePlayerController.m in Sources */,
 				D3A6906018EBF1BF000029B8 /* main.m in Sources */,
+				D386685A18F7AE0100517FF8 /* WYTableViewController.m in Sources */,
 				D3A6908D18EBF1E0000029B8 /* WYVidoePlayerView.m in Sources */,
 				D3A6906A18EBF1BF000029B8 /* WYViewController.m in Sources */,
 			);

@@ -2,7 +2,9 @@ WYVideoPlayer
 =============
 
 自定义视频播放器，及旋转操作
-
+## 系统兼容
+ios6.0及以上
+在ios6.0里使用wantsFullScreenLayout＝YES来达到全屏播放的处理。
 ## 实现
 使用AVPlayer来播放视频
 

@@ -21,6 +21,8 @@
     void(^orientationWillChangeBlock)(float animationDuration, WYVidoePlayerView *playerView);
     void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVidoePlayerView *playerView);
     id periodicTimeObserver;
+    
+//    BOOL subViewHide;
 }
 
 
@@ -29,7 +31,9 @@
 // Define this constant for the key-value observation context.
 static const NSString *ItemStatusContext;
 static const NSString *ItemLoadedTimeContext;
-static const NSString *AssetDurationContext;
+static const NSString *ItemDurationContext;
+static const NSString *ItemTimedMetadataContext;
+static const NSString *PlayerViewFrameContext;
 @implementation WYVidoePlayerView
 
 #pragma mark - 初始化
@@ -54,10 +58,13 @@ static const NSString *AssetDurationContext;
 
 - (void)doInit
 {
+    [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:&PlayerViewFrameContext];
     playerOriginalBounds = self.bounds;
     playerOriginalCenter = self.center;
     
     [self loadAssetFromFile];
+    
+    
 }
 
 + (Class)layerClass {
@@ -93,15 +100,28 @@ static const NSString *AssetDurationContext;
 
 - (void)stop
 {
+    [player pause];
     [player removeTimeObserver:periodicTimeObserver];
+
+    [playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
+    [playerItem removeObserver:self forKeyPath:@"loadedTimeRanges" context:&ItemLoadedTimeContext];
+    [playerItem removeObserver:self forKeyPath:@"duration" context:&ItemDurationContext];
+    [playerItem removeObserver:self forKeyPath:@"timedMetadata" context:&ItemTimedMetadataContext];
+    [self removeObserver:self forKeyPath:@"frame" context:&PlayerViewFrameContext];
+    playerItem = nil;
+    
     player = nil;
 }
 - (void)fullScreen{
     
     // 旋转 status bar
     // 旋转 palyer 并正确设置 player size
+    
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:YES];
+//        if (orientationWillChangeBlock) {
+//            orientationWillChangeBlock([UIApplication sharedApplication].statusBarOrientationAnimationDuration, self);
+//        }
         [UIView animateWithDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration animations:^{
             self.transform = CGAffineTransformIdentity;
             self.center = playerOriginalCenter;
@@ -111,7 +131,12 @@ static const NSString *AssetDurationContext;
     }else{
         // setStatusBarOrientation 在文档里有说明，如果由设备来管理旋转，该方法不好使（not working）。所以shouldAutorotate应该返回NO，意思完全交由我们自己管理，同时要注意到shouldAutorotate是在ios6以后有的方法
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
-        
+        if (orientationWillChangeBlock) {
+            orientationWillChangeBlock([UIApplication sharedApplication].statusBarOrientationAnimationDuration, self);
+        }
+        if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+        }
         [UIView animateWithDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration animations:^{
             
             // 将center移动到屏幕的中间
@@ -124,8 +149,9 @@ static const NSString *AssetDurationContext;
             self.transform = CGAffineTransformMakeRotation(M_PI_2);
             
         }];
-        
     }
+    
+    
 }
 
 #pragma mark - Block
@@ -171,7 +197,6 @@ static const NSString *AssetDurationContext;
                             AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
                             
                             if (status == AVKeyValueStatusLoaded) {
-                                // 媒体总时长
                                 
                                 playerItem = [AVPlayerItem playerItemWithAsset:asset];
                                 // ensure that this is done before the playerItem is associated with the player
@@ -180,9 +205,9 @@ static const NSString *AssetDurationContext;
                                 [playerItem addObserver:self forKeyPath:@"loadedTimeRanges"
                                                 options:NSKeyValueObservingOptionNew context:&ItemLoadedTimeContext];
                                 [playerItem addObserver:self forKeyPath:@"duration"
-                                                options:NSKeyValueObservingOptionNew context:&AssetDurationContext];
+                                                options:NSKeyValueObservingOptionNew context:&ItemDurationContext];
                                 [playerItem addObserver:self forKeyPath:@"timedMetadata"
-                                                options:NSKeyValueObservingOptionNew context:&AssetDurationContext];
+                                                options:NSKeyValueObservingOptionNew context:&ItemTimedMetadataContext];
                                 
                                 // 播放结束时的通知
                                 
@@ -216,33 +241,54 @@ static const NSString *AssetDurationContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     
+    
     if (context == &ItemStatusContext) {
-        dispatch_async(dispatch_get_main_queue(),
-                       ^{
-                           if (playerItemStatusChangeBlock) {
-                               playerItemStatusChangeBlock(playerItem.status, self);
-                           }
-                       });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (playerItemStatusChangeBlock) {
+                playerItemStatusChangeBlock(playerItem.status, self);
+            }
+            
+        });
         
         return;
     }else if (context == &ItemLoadedTimeContext){
-        NSArray *loadedTimeRanges = [[self.player currentItem] loadedTimeRanges];
-        CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
-        float startSeconds = CMTimeGetSeconds(timeRange.start);
-        float durationSeconds = CMTimeGetSeconds(timeRange.duration);
-        NSTimeInterval result = startSeconds + durationSeconds;
-        if (loadedTimeUpdateBlock) {
-            loadedTimeUpdateBlock(result, self);
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *loadedTimeRanges = [[self.player currentItem] loadedTimeRanges];
+            
+            CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
+            float startSeconds = CMTimeGetSeconds(timeRange.start);
+            float durationSeconds = CMTimeGetSeconds(timeRange.duration);
+            NSTimeInterval result = startSeconds + durationSeconds;
+            if (loadedTimeUpdateBlock) {
+                loadedTimeUpdateBlock(result, self);
+            }
+            
+            
+        });
+        return;
+    }else if (context == &ItemDurationContext){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"presentationSize %@", NSStringFromCGSize([[self.player currentItem] presentationSize]));
+            _duration = playerItem.duration.value/playerItem.duration.timescale;
+            if (currentTimeUpdateBlock) {
+                currentTimeUpdateBlock(0, self);
+            }
+            
+        });
+        return;
+    }else if (context == &ItemTimedMetadataContext){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *timeMetadataArray = playerItem.timedMetadata;
+            
+        });
+        return;
+    }else if (context == &PlayerViewFrameContext){
+        playerOriginalBounds = self.bounds;
+        playerOriginalCenter = self.center;
         
         return;
-    }else if (context == &AssetDurationContext){
-        _duration = playerItem.duration.value/playerItem.duration.timescale;
-        if (currentTimeUpdateBlock) {
-            currentTimeUpdateBlock(0, self);
-        }
-        return;
     }
+    
     [super observeValueForKeyPath:keyPath ofObject:object
                            change:change context:context];
     return;

@@ -25,16 +25,23 @@
 }
 @end
 // TODO: 在视频加载时，应该有一个默认图片显示，并且有一个小圈在转
+// 1. ios6适配
+// 2. 全屏时状态栏的处理
+// 3. stop时要处理、销毁的对象
 @implementation WYMoviePlayerController
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
-    
+
     [slider setMaximumTrackImage:[UIImage imageNamed:@"播放进度条"] forState:UIControlStateNormal];
     [slider setMinimumTrackImage:[UIImage imageNamed:@"缓存条"] forState:UIControlStateNormal];
     [slider setThumbImage:[UIImage imageNamed:@"播放拖动钮"] forState:UIControlStateNormal];
+    
+    if ([UIDevice currentDevice].systemVersion.floatValue < 7 ) {
+        self.wantsFullScreenLayout = YES;
+    }
     
     [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVidoePlayerView *playerView) {
         if (status == AVPlayerItemStatusReadyToPlay) {
@@ -53,20 +60,27 @@
     
     [self.playerView setOrientationWillChangeBlock:^(float animationDuration, WYVidoePlayerView *playerView) {
         if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-            
-            [UIView animateWithDuration:animationDuration animations:^{
-                
-            }];
+            if ([UIDevice currentDevice].systemVersion.floatValue < 7 ) {
+                self.wantsFullScreenLayout = YES;
+            }
+
         }else{
-            [UIView animateWithDuration:animationDuration animations:^{
             
-            }];
         }
     }];
     
     playerOriginalBounds = _playerView.bounds;
     playerOriginalCenter = _playerView.center;
     
+    
+    UITapGestureRecognizer *hideSubviewGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSubviewGestureAction)];
+    hideSubviewGesture.numberOfTapsRequired = 1;
+    
+    [_playerView addGestureRecognizer:hideSubviewGesture];
+    UITapGestureRecognizer *fullScreentGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fullScreenAction:)];
+    fullScreentGesture.numberOfTapsRequired = 2;
+    [hideSubviewGesture requireGestureRecognizerToFail:fullScreentGesture];
+    [_playerView addGestureRecognizer:fullScreentGesture];
 }
 
 
@@ -84,10 +98,55 @@
     }
 }
 - (IBAction)popAction:(id)sender {
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        [self fullScreenAction:nil];
+    }else{
+        [self.playerView stop];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    }
     
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)hideSubviewGestureAction
+{
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        if ([UIApplication sharedApplication].statusBarHidden) {
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+            [UIView animateWithDuration:0.15 animations:^{
+                for (UIView *view in _playerView.subviews) {
+                    view.alpha = 1;
+                }
+            }];
+        }else{
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+            [UIView animateWithDuration:0.15 animations:^{
+                for (UIView *view in _playerView.subviews) {
+                    view.alpha = 0;
+                }
+            }];
+        }
+        
+    }else{
+        
+        if (_playerView.subviews.count > 0) {
+            UIView *view = _playerView.subviews[0];
+            if (view.alpha) {
+                [UIView animateWithDuration:0.15 animations:^{
+                    for (UIView *view in _playerView.subviews) {
+                        view.alpha = 0;
+                    }
+                }];
+            }else{
+                [UIView animateWithDuration:0.15 animations:^{
+                    for (UIView *view in _playerView.subviews) {
+                        view.alpha = 1;
+                    }
+                }];
+            }
+        }
+    }
+}
 #pragma mark - 旋转
 /*
  TODO:

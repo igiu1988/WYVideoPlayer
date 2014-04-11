@@ -8,7 +8,7 @@
         <!--Table View Controller - Root View Controller-->
         <scene sceneID="GVw-Qg-GvH">
             <objects>
-                <tableViewController id="fzs-E9-qVS" sceneMemberID="viewController">
+                <tableViewController id="fzs-E9-qVS" customClass="WYTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="gLt-Cz-5Zl">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -48,7 +48,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Lk-Cx-8OF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="13" y="223"/>
+            <point key="canvasLocation" x="-89" y="235"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="y2Z-yX-TNR">
@@ -78,7 +78,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" id="ArV-5h-2QW">
-                                        <rect key="frame" x="50" y="170" width="231" height="31"/>
+                                        <rect key="frame" x="50" y="176" width="231" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                     </slider>
                                     <view contentMode="scaleToFill" id="55f-U2-GHs">
@@ -140,6 +140,7 @@
                         <color key="tintColor" red="0.1489864588" green="0.4663141348" blue="0.84867527170000001" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" title="视频" id="elA-Fn-frc"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="currentTimeLabel" destination="ye0-KU-oCJ" id="AEn-QI-j5f"/>
                         <outlet property="playButton" destination="SHL-fP-Dam" id="Nub-qu-9uh"/>
