@@ -34,7 +34,7 @@
 
 - (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVidoePlayerView *playerView))block;
 - (void)setCurrentTimeUpdateBlock:(void(^)(int64_t currentTime, WYVidoePlayerView *playerView))block;
-- (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, WYVidoePlayerView *playerView))block;
+- (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, WYVidoePlayerView *playerView))block;
 - (void)setLoadedTimeUpdateBlock:(void(^)(int64_t loadTime, WYVidoePlayerView *playerView))block;
 
 @end

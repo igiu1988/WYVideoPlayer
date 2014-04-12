@@ -17,6 +17,7 @@
     __weak IBOutlet UIButton *playButton;
     __weak IBOutlet UISlider *slider;
     __weak IBOutlet UILabel *currentTimeLabel;
+    __weak IBOutlet UIView *topControlView;
     
     UIButton *fullScreenButton;
     
@@ -25,9 +26,7 @@
 }
 @end
 // TODO: 在视频加载时，应该有一个默认图片显示，并且有一个小圈在转
-// 1. ios6适配
-// 2. 全屏时状态栏的处理
-// 3. stop时要处理、销毁的对象
+
 @implementation WYMoviePlayerController
 
 
@@ -58,14 +57,24 @@
     }];
 
     
-    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, WYVidoePlayerView *playerView) {
-        if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-            if ([UIDevice currentDevice].systemVersion.floatValue < 7 ) {
-                self.wantsFullScreenLayout = YES;
+    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, UIInterfaceOrientation orientationWillChangeTo,WYVidoePlayerView *playerView) {
+        if (UIInterfaceOrientationIsLandscape(orientationWillChangeTo)) {
+            if (topControlView.top == 0) {
+                topControlView.centerY += 20;
             }
-
-        }else{
             
+            // ios6全屏播放时，状态栏要设置成半透明的
+            if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+            }
+            
+        }else{
+            topControlView.centerY -= 20;
+            
+            
+            if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+            }
         }
     }];
     

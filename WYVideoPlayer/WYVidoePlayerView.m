@@ -18,7 +18,7 @@
     
     void (^playerItemStatusChangeBlock)(AVPlayerItemStatus status, WYVidoePlayerView *playerView);
     void(^currentTimeUpdateBlock)(int64_t currentTime, WYVidoePlayerView *playerView);
-    void(^orientationWillChangeBlock)(float animationDuration, WYVidoePlayerView *playerView);
+    void(^orientationWillChangeBlock)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, WYVidoePlayerView *playerView);
     void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVidoePlayerView *playerView);
     id periodicTimeObserver;
     
@@ -32,7 +32,6 @@
 static const NSString *ItemStatusContext;
 static const NSString *ItemLoadedTimeContext;
 static const NSString *ItemDurationContext;
-static const NSString *ItemTimedMetadataContext;
 static const NSString *PlayerViewFrameContext;
 @implementation WYVidoePlayerView
 
@@ -64,7 +63,7 @@ static const NSString *PlayerViewFrameContext;
     
     [self loadAssetFromFile];
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 + (Class)layerClass {
@@ -100,13 +99,13 @@ static const NSString *PlayerViewFrameContext;
 
 - (void)stop
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [player pause];
     [player removeTimeObserver:periodicTimeObserver];
 
     [playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
     [playerItem removeObserver:self forKeyPath:@"loadedTimeRanges" context:&ItemLoadedTimeContext];
     [playerItem removeObserver:self forKeyPath:@"duration" context:&ItemDurationContext];
-    [playerItem removeObserver:self forKeyPath:@"timedMetadata" context:&ItemTimedMetadataContext];
     [self removeObserver:self forKeyPath:@"frame" context:&PlayerViewFrameContext];
     playerItem = nil;
     
@@ -118,10 +117,11 @@ static const NSString *PlayerViewFrameContext;
     // 旋转 palyer 并正确设置 player size
     
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        if (orientationWillChangeBlock) {
+            orientationWillChangeBlock([UIApplication sharedApplication].statusBarOrientationAnimationDuration, UIInterfaceOrientationPortrait,self);
+        }
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:YES];
-//        if (orientationWillChangeBlock) {
-//            orientationWillChangeBlock([UIApplication sharedApplication].statusBarOrientationAnimationDuration, self);
-//        }
+        
         [UIView animateWithDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration animations:^{
             self.transform = CGAffineTransformIdentity;
             self.center = playerOriginalCenter;
@@ -129,29 +129,60 @@ static const NSString *PlayerViewFrameContext;
         }];
         
     }else{
-        // setStatusBarOrientation 在文档里有说明，如果由设备来管理旋转，该方法不好使（not working）。所以shouldAutorotate应该返回NO，意思完全交由我们自己管理，同时要注意到shouldAutorotate是在ios6以后有的方法
-        [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeRight animated:YES];
-        if (orientationWillChangeBlock) {
-            orientationWillChangeBlock([UIApplication sharedApplication].statusBarOrientationAnimationDuration, self);
-        }
-        if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-        }
-        [UIView animateWithDuration:[UIApplication sharedApplication].statusBarOrientationAnimationDuration animations:^{
-            
-            // 将center移动到屏幕的中间
-            float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
-            float deviceWidth = [[UIScreen mainScreen] bounds].size.width;
-            
-            self.bounds = CGRectMake(0, 0, deviceHeight, deviceWidth);
-            self.center = CGPointMake(deviceWidth/2, deviceHeight/2);
-            
-            self.transform = CGAffineTransformMakeRotation(M_PI_2);
-            
-        }];
+        [self changeOrientationTo:UIInterfaceOrientationLandscapeRight rotationAngle:M_PI_2];
     }
     
     
+}
+
+- (void)changeOrientationTo:(UIInterfaceOrientation)orientation rotationAngle:(double_t)angle
+{
+    
+    if (orientation == [UIApplication sharedApplication].statusBarOrientation) {
+        return;
+    }
+    
+    // 根据statusBarOrientationAnimationDuration的文档描述，就分情况采取不同的时间
+    float duration = 0;
+    if (angle - M_PI_2 < 0.0001) {
+        duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
+    }else{
+        duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration * 2;
+    }
+    
+    if (orientationWillChangeBlock) {
+        orientationWillChangeBlock(duration, orientation, self);
+    }
+    
+    [UIView animateWithDuration:duration animations:^{
+        // setStatusBarOrientation 在文档里有说明，如果由设备来管理旋转，该方法不好使（not working）。所以shouldAutorotate应该返回NO，意思完全交由我们自己管理，同时要注意到shouldAutorotate是在ios6以后有的方法
+        [[UIApplication sharedApplication] setStatusBarOrientation:orientation];
+        // 将center移动到屏幕的中间
+        float deviceHeight = [[UIScreen mainScreen] bounds].size.height;
+        float deviceWidth = [[UIScreen mainScreen] bounds].size.width;
+        
+        self.bounds = CGRectMake(0, 0, deviceHeight, deviceWidth);
+        self.center = CGPointMake(deviceWidth/2, deviceHeight/2);
+        
+        self.transform = CGAffineTransformRotate(self.transform, angle);
+        
+    }];
+}
+
+/**
+ *  只有在全屏的情况下才响应左横屏、右横屏操作
+ */
+- (void)deviceOrientationDidChange:(NSNotification *)notification
+{
+    if (!CGAffineTransformIsIdentity(self.transform)) {
+        UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+        if ( deviceOrientation == UIDeviceOrientationLandscapeRight) {
+            [self changeOrientationTo:UIInterfaceOrientationLandscapeLeft rotationAngle:M_PI];
+        }else if ( deviceOrientation == UIDeviceOrientationLandscapeLeft){
+            [self changeOrientationTo:UIInterfaceOrientationLandscapeRight rotationAngle:M_PI];
+        }
+    }
+
 }
 
 #pragma mark - Block
@@ -166,7 +197,7 @@ static const NSString *PlayerViewFrameContext;
     currentTimeUpdateBlock = block;
 }
 
-- (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, WYVidoePlayerView *playerView))block
+- (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo,WYVidoePlayerView *playerView))block
 {
     orientationWillChangeBlock = block;
 }
@@ -206,8 +237,6 @@ static const NSString *PlayerViewFrameContext;
                                                 options:NSKeyValueObservingOptionNew context:&ItemLoadedTimeContext];
                                 [playerItem addObserver:self forKeyPath:@"duration"
                                                 options:NSKeyValueObservingOptionNew context:&ItemDurationContext];
-                                [playerItem addObserver:self forKeyPath:@"timedMetadata"
-                                                options:NSKeyValueObservingOptionNew context:&ItemTimedMetadataContext];
                                 
                                 // 播放结束时的通知
                                 
@@ -268,17 +297,11 @@ static const NSString *PlayerViewFrameContext;
         return;
     }else if (context == &ItemDurationContext){
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"presentationSize %@", NSStringFromCGSize([[self.player currentItem] presentationSize]));
+//            NSLog(@"presentationSize %@", NSStringFromCGSize([[self.player currentItem] presentationSize]));
             _duration = playerItem.duration.value/playerItem.duration.timescale;
             if (currentTimeUpdateBlock) {
                 currentTimeUpdateBlock(0, self);
             }
-            
-        });
-        return;
-    }else if (context == &ItemTimedMetadataContext){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSArray *timeMetadataArray = playerItem.timedMetadata;
             
         });
         return;
