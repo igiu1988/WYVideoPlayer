@@ -18,7 +18,7 @@
     
     void (^playerItemStatusChangeBlock)(AVPlayerItemStatus status, WYVidoePlayerView *playerView);
     void(^currentTimeUpdateBlock)(int64_t currentTime, WYVidoePlayerView *playerView);
-    void(^orientationWillChangeBlock)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, WYVidoePlayerView *playerView);
+    void(^orientationWillChangeBlock)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVidoePlayerView *playerView);
     void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVidoePlayerView *playerView);
     id periodicTimeObserver;
     
@@ -33,6 +33,7 @@ static const NSString *ItemStatusContext;
 static const NSString *ItemLoadedTimeContext;
 static const NSString *ItemDurationContext;
 static const NSString *PlayerViewFrameContext;
+static const NSString *ReadyForDisplayContext;
 @implementation WYVidoePlayerView
 
 #pragma mark - 初始化
@@ -61,7 +62,7 @@ static const NSString *PlayerViewFrameContext;
     playerOriginalBounds = self.bounds;
     playerOriginalCenter = self.center;
     
-    [self loadAssetFromFile];
+//    [self loadAssetFromFile];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
@@ -77,6 +78,128 @@ static const NSString *PlayerViewFrameContext;
 - (void)setPlayer:(AVPlayer *)__player {
     [(AVPlayerLayer *)[self layer] setPlayer:__player];
     
+}
+#pragma mark - 视频载入
+- (void)showLoadingView
+{
+    if (_loadingView) {
+        [self addSubview:_loadingView];
+    }
+}
+
+- (void)loadURL:(NSURL *)url
+{
+    [self loadAssetWithURL:url];
+}
+- (void)loadAssetWithURL:(NSURL *)url{
+ 
+    
+    [self showLoadingView];
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
+    NSString *tracksKey = @"tracks";
+    
+    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler:
+     ^{
+         // Completion handler block.
+         dispatch_async(dispatch_get_main_queue(),
+                        ^{
+                            NSError *error;
+                            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
+                            
+                            if (status == AVKeyValueStatusLoaded) {
+                                
+                                playerItem = [AVPlayerItem playerItemWithAsset:asset];
+                                // ensure that this is done before the playerItem is associated with the player
+                                [playerItem addObserver:self forKeyPath:@"status"
+                                                options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
+                                [playerItem addObserver:self forKeyPath:@"loadedTimeRanges"
+                                                options:NSKeyValueObservingOptionNew context:&ItemLoadedTimeContext];
+                                [playerItem addObserver:self forKeyPath:@"duration"
+                                                options:NSKeyValueObservingOptionNew context:&ItemDurationContext];
+                                
+                                // 播放结束时的通知
+                                
+                                [[NSNotificationCenter defaultCenter] addObserver:self
+                                                                         selector:@selector(playerItemDidReachEnd:)
+                                                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                                                           object:playerItem];
+                                player = [AVPlayer playerWithPlayerItem:playerItem];
+                                [self setPlayer:player];
+                                [self.layer addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionNew context:&ReadyForDisplayContext];
+                                
+                                
+                                // 每0.1秒更新一次
+                                periodicTimeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
+                                    if (currentTimeUpdateBlock) {
+                                        currentTimeUpdateBlock((time.value)/time.timescale, self);
+                                    }
+                                }];
+                                
+                            }
+                            else {
+                                // You should deal with the error appropriately.
+                                NSLog(@"The asset's tracks were not loaded:\n%@", [error localizedDescription]);
+                            }
+                        });
+         
+     }];
+}
+
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                        change:(NSDictionary *)change context:(void *)context {
+    
+    
+    if (context == &ItemStatusContext) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (playerItemStatusChangeBlock) {
+                playerItemStatusChangeBlock(playerItem.status, self);
+            }
+            if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
+                if (_loadingView) {
+                    [_loadingView removeFromSuperview];
+                }
+            }
+        });
+        
+        return;
+    }else if (context == &ItemLoadedTimeContext){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *loadedTimeRanges = [[self.player currentItem] loadedTimeRanges];
+            
+            CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
+            float startSeconds = CMTimeGetSeconds(timeRange.start);
+            float durationSeconds = CMTimeGetSeconds(timeRange.duration);
+            NSTimeInterval result = startSeconds + durationSeconds;
+            if (loadedTimeUpdateBlock) {
+                loadedTimeUpdateBlock(result, self);
+            }
+
+        });
+        return;
+    }else if (context == &ItemDurationContext){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //            NSLog(@"presentationSize %@", NSStringFromCGSize([[self.player currentItem] presentationSize]));
+            _duration = playerItem.duration.value/playerItem.duration.timescale;
+            if (currentTimeUpdateBlock) {
+                currentTimeUpdateBlock(0, self);
+            }
+            
+        });
+        return;
+    }else if (context == &PlayerViewFrameContext){
+        playerOriginalBounds = self.bounds;
+        playerOriginalCenter = self.center;
+        
+        return;
+    }else if (context == &ReadyForDisplayContext){
+        
+        return;
+    }
+    
+    [super observeValueForKeyPath:keyPath ofObject:object
+                           change:change context:context];
+    return;
 }
 
 #pragma mark - 控制
@@ -107,10 +230,17 @@ static const NSString *PlayerViewFrameContext;
     [playerItem removeObserver:self forKeyPath:@"loadedTimeRanges" context:&ItemLoadedTimeContext];
     [playerItem removeObserver:self forKeyPath:@"duration" context:&ItemDurationContext];
     [self removeObserver:self forKeyPath:@"frame" context:&PlayerViewFrameContext];
+    [self.layer removeObserver:self forKeyPath:@"readyForDisplay" context:&ReadyForDisplayContext];
     playerItem = nil;
     
     player = nil;
 }
+
+- (void)playerItemDidReachEnd:(NSNotification *)notification {
+    [self.player seekToTime:kCMTimeZero];
+}
+
+#pragma mark - 全屏、旋转相关
 - (void)fullScreen{
     
     // 旋转 status bar
@@ -118,7 +248,7 @@ static const NSString *PlayerViewFrameContext;
     
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
         if (orientationWillChangeBlock) {
-            orientationWillChangeBlock([UIApplication sharedApplication].statusBarOrientationAnimationDuration, UIInterfaceOrientationPortrait,self);
+            orientationWillChangeBlock([UIApplication sharedApplication].statusBarOrientationAnimationDuration,  UIInterfaceOrientationPortrait, 0,self);
         }
         [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationPortrait animated:YES];
         
@@ -151,7 +281,7 @@ static const NSString *PlayerViewFrameContext;
     }
     
     if (orientationWillChangeBlock) {
-        orientationWillChangeBlock(duration, orientation, self);
+        orientationWillChangeBlock(duration, orientation, angle, self);
     }
     
     [UIView animateWithDuration:duration animations:^{
@@ -185,6 +315,7 @@ static const NSString *PlayerViewFrameContext;
 
 }
 
+
 #pragma mark - Block
 
 - (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVidoePlayerView *playerView))block
@@ -197,7 +328,7 @@ static const NSString *PlayerViewFrameContext;
     currentTimeUpdateBlock = block;
 }
 
-- (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo,WYVidoePlayerView *playerView))block
+- (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVidoePlayerView *playerView))block
 {
     orientationWillChangeBlock = block;
 }
@@ -206,119 +337,6 @@ static const NSString *PlayerViewFrameContext;
 {
     loadedTimeUpdateBlock = block;
 }
-#pragma mark - 视频载入
-- (void)loadAssetFromFile{
-    
-    //代码公开时，要使用这个视频地址
-    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
-    
-//    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/IMG_0313.MOV"];
-//    NSURL *url = [NSURL fileURLWithPath:path];
-    
-    
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
-    NSString *tracksKey = @"tracks";
-    
-    [asset loadValuesAsynchronouslyForKeys:@[tracksKey] completionHandler:
-     ^{
-         // Completion handler block.
-         dispatch_async(dispatch_get_main_queue(),
-                        ^{
-                            NSError *error;
-                            AVKeyValueStatus status = [asset statusOfValueForKey:tracksKey error:&error];
-                            
-                            if (status == AVKeyValueStatusLoaded) {
-                                
-                                playerItem = [AVPlayerItem playerItemWithAsset:asset];
-                                // ensure that this is done before the playerItem is associated with the player
-                                [playerItem addObserver:self forKeyPath:@"status"
-                                                options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
-                                [playerItem addObserver:self forKeyPath:@"loadedTimeRanges"
-                                                options:NSKeyValueObservingOptionNew context:&ItemLoadedTimeContext];
-                                [playerItem addObserver:self forKeyPath:@"duration"
-                                                options:NSKeyValueObservingOptionNew context:&ItemDurationContext];
-                                
-                                // 播放结束时的通知
-                                
-                                [[NSNotificationCenter defaultCenter] addObserver:self
-                                                                         selector:@selector(playerItemDidReachEnd:)
-                                                                             name:AVPlayerItemDidPlayToEndTimeNotification
-                                                                           object:playerItem];
-                                player = [AVPlayer playerWithPlayerItem:playerItem];
-                                [self setPlayer:player];
-                                
-                                
-                                
-                                // 每0.1秒更新一次
-                                periodicTimeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
-                                    if (currentTimeUpdateBlock) {
-                                        currentTimeUpdateBlock((time.value)/time.timescale, self);
-                                    }
-                                }];
-                                
-                            }
-                            else {
-                                // You should deal with the error appropriately.
-                                NSLog(@"The asset's tracks were not loaded:\n%@", [error localizedDescription]);
-                            }
-                        });
-         
-     }];
-}
 
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-                        change:(NSDictionary *)change context:(void *)context {
-    
-    
-    if (context == &ItemStatusContext) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (playerItemStatusChangeBlock) {
-                playerItemStatusChangeBlock(playerItem.status, self);
-            }
-            
-        });
-        
-        return;
-    }else if (context == &ItemLoadedTimeContext){
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSArray *loadedTimeRanges = [[self.player currentItem] loadedTimeRanges];
-            
-            CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
-            float startSeconds = CMTimeGetSeconds(timeRange.start);
-            float durationSeconds = CMTimeGetSeconds(timeRange.duration);
-            NSTimeInterval result = startSeconds + durationSeconds;
-            if (loadedTimeUpdateBlock) {
-                loadedTimeUpdateBlock(result, self);
-            }
-            
-            
-        });
-        return;
-    }else if (context == &ItemDurationContext){
-        dispatch_async(dispatch_get_main_queue(), ^{
-//            NSLog(@"presentationSize %@", NSStringFromCGSize([[self.player currentItem] presentationSize]));
-            _duration = playerItem.duration.value/playerItem.duration.timescale;
-            if (currentTimeUpdateBlock) {
-                currentTimeUpdateBlock(0, self);
-            }
-            
-        });
-        return;
-    }else if (context == &PlayerViewFrameContext){
-        playerOriginalBounds = self.bounds;
-        playerOriginalCenter = self.center;
-        
-        return;
-    }
-    
-    [super observeValueForKeyPath:keyPath ofObject:object
-                           change:change context:context];
-    return;
-}
-
-- (void)playerItemDidReachEnd:(NSNotification *)notification {
-    [self.player seekToTime:kCMTimeZero];
-}
 
 @end

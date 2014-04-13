@@ -23,6 +23,10 @@
     
     CGPoint playerOriginalCenter;
     CGRect playerOriginalBounds;
+    
+    
+    // for test
+    __weak IBOutlet UILabel *loadingProgressLabel;
 }
 @end
 // TODO: 在视频加载时，应该有一个默认图片显示，并且有一个小圈在转
@@ -42,6 +46,10 @@
         self.wantsFullScreenLayout = YES;
     }
     
+    UIImageView *loadingView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.playerView.width, self.playerView.height)];
+    loadingView.image = [UIImage imageNamed:@"loadingImage"];
+    self.playerView.loadingView = loadingView;
+    self.playerView.backgroundColor = [UIColor blackColor];
     [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVidoePlayerView *playerView) {
         if (status == AVPlayerItemStatusReadyToPlay) {
             slider.maximumValue = playerView.duration;
@@ -53,29 +61,42 @@
     
     [self.playerView setCurrentTimeUpdateBlock:^(int64_t currentTime, WYVidoePlayerView *playerView) {
         slider.value = currentTime;
-        currentTimeLabel.text = [NSString stringWithFormat:@"%lld/%lld", currentTime, playerView.duration];
+        currentTimeLabel.text = [NSString stringWithFormat:@"已播放%lld/%lld", currentTime, playerView.duration];
     }];
 
     
-    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, UIInterfaceOrientation orientationWillChangeTo,WYVidoePlayerView *playerView) {
+    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angel, WYVidoePlayerView *playerView) {
+        
         if (UIInterfaceOrientationIsLandscape(orientationWillChangeTo)) {
-            if (topControlView.top == 0) {
-                topControlView.centerY += 20;
-            }
+
+            [UIView animateWithDuration:animationDuration animations:^{
+                if (topControlView.top == 0) {
+                    topControlView.centerY += 20;
+                }
+                loadingProgressLabel.transform = CGAffineTransformRotate(loadingProgressLabel.transform, angel);
+            }];
             
-            // ios6全屏播放时，状态栏要设置成半透明的
+            
+            // 全屏播放时，状态栏要设置成半透明的
             if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+            }else{
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
             }
             
         }else{
-            topControlView.centerY -= 20;
+            [UIView animateWithDuration:animationDuration animations:^{
+                topControlView.centerY -= 20;
+                loadingProgressLabel.transform = CGAffineTransformIdentity;
+            }];
             
             
-            if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
-                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-            }
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         }
+    }];
+    
+    [self.playerView setLoadedTimeUpdateBlock:^(int64_t loadTime, WYVidoePlayerView *playerView) {
+        loadingProgressLabel.text = [NSString stringWithFormat:@"已加载%lld / %lld", loadTime, playerView.duration];
     }];
     
     playerOriginalBounds = _playerView.bounds;
@@ -90,6 +111,11 @@
     fullScreentGesture.numberOfTapsRequired = 2;
     [hideSubviewGesture requireGestureRecognizerToFail:fullScreentGesture];
     [_playerView addGestureRecognizer:fullScreentGesture];
+    
+    //    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/IMG_0313.MOV"];
+    //    NSURL *url = [NSURL fileURLWithPath:path];
+    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    [_playerView loadURL:url];
 }
 
 
@@ -102,8 +128,10 @@
 {
     if (_playerView.rate == 0) {
         [_playerView play];
+        [playButton setTitle:@"暂停" forState:UIControlStateNormal];
     }else{
         [_playerView pause];
+        [playButton setTitle:@"播放" forState:UIControlStateNormal];
     }
 }
 - (IBAction)popAction:(id)sender {
