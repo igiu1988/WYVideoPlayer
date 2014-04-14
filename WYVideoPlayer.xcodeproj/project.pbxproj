@@ -7,31 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D309673318FB8727008D6417 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D309673218FB8727008D6417 /* CFNetwork.framework */; };
+		D309673518FB872C008D6417 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D309673418FB872C008D6417 /* QuartzCore.framework */; };
 		D321AAE018FAAAB60038533F /* loadingImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D321AADE18FAAAB60038533F /* loadingImage.png */; };
 		D321AAE118FAAAB60038533F /* loadingImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D321AADF18FAAAB60038533F /* loadingImage@2x.png */; };
 		D386685A18F7AE0100517FF8 /* WYTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D386685918F7AE0100517FF8 /* WYTableViewController.m */; };
-		D3979CE118F68804004B2A12 /* videoPlay.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCB18F68804004B2A12 /* videoPlay.png */; };
-		D3979CE218F68804004B2A12 /* videoPlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCC18F68804004B2A12 /* videoPlay@2x.png */; };
 		D3979CE318F68804004B2A12 /* 下载按钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCD18F68804004B2A12 /* 下载按钮.png */; };
 		D3979CE418F68804004B2A12 /* 下载按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCE18F68804004B2A12 /* 下载按钮@2x.png */; };
-		D3979CE518F68804004B2A12 /* 下部播放按钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCF18F68804004B2A12 /* 下部播放按钮.png */; };
-		D3979CE618F68804004B2A12 /* 下部播放按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD018F68804004B2A12 /* 下部播放按钮@2x.png */; };
 		D3979CE718F68804004B2A12 /* 总时间条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD118F68804004B2A12 /* 总时间条.png */; };
 		D3979CE818F68804004B2A12 /* 总时间条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD218F68804004B2A12 /* 总时间条@2x.png */; };
 		D3979CE918F68804004B2A12 /* 播放拖动钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD318F68804004B2A12 /* 播放拖动钮.png */; };
 		D3979CEA18F68804004B2A12 /* 播放拖动钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD418F68804004B2A12 /* 播放拖动钮@2x.png */; };
 		D3979CEB18F68804004B2A12 /* 播放进度条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD518F68804004B2A12 /* 播放进度条.png */; };
 		D3979CEC18F68804004B2A12 /* 播放进度条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD618F68804004B2A12 /* 播放进度条@2x.png */; };
-		D3979CED18F68804004B2A12 /* 暂停按钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD718F68804004B2A12 /* 暂停按钮.png */; };
-		D3979CEE18F68804004B2A12 /* 暂停按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD818F68804004B2A12 /* 暂停按钮@2x.png */; };
 		D3979CEF18F68804004B2A12 /* 缓存条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD918F68804004B2A12 /* 缓存条.png */; };
 		D3979CF018F68804004B2A12 /* 缓存条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CDA18F68804004B2A12 /* 缓存条@2x.png */; };
-		D3979CF118F68804004B2A12 /* 视频播放按钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CDB18F68804004B2A12 /* 视频播放按钮.png */; };
-		D3979CF218F68804004B2A12 /* 视频播放按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CDC18F68804004B2A12 /* 视频播放按钮@2x.png */; };
-		D3979CF318F68804004B2A12 /* 视频背景_1.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CDD18F68804004B2A12 /* 视频背景_1.png */; };
-		D3979CF418F68804004B2A12 /* 视频背景_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CDE18F68804004B2A12 /* 视频背景_1@2x.png */; };
-		D3979CF518F68804004B2A12 /* 选项背景.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CDF18F68804004B2A12 /* 选项背景.png */; };
-		D3979CF618F68804004B2A12 /* 选项背景@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CE018F68804004B2A12 /* 选项背景@2x.png */; };
 		D3979CF918F6C7C3004B2A12 /* 返回箭头.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CF718F6C7C3004B2A12 /* 返回箭头.png */; };
 		D3979CFA18F6C7C3004B2A12 /* 返回箭头@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CF818F6C7C3004B2A12 /* 返回箭头@2x.png */; };
 		D3A6905418EBF1BF000029B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905318EBF1BF000029B8 /* Foundation.framework */; };
@@ -65,32 +55,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D309673218FB8727008D6417 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		D309673418FB872C008D6417 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D321AADE18FAAAB60038533F /* loadingImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loadingImage.png; sourceTree = "<group>"; };
 		D321AADF18FAAAB60038533F /* loadingImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loadingImage@2x.png"; sourceTree = "<group>"; };
 		D386685818F7AE0100517FF8 /* WYTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYTableViewController.h; sourceTree = "<group>"; };
 		D386685918F7AE0100517FF8 /* WYTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYTableViewController.m; sourceTree = "<group>"; };
-		D3979CCB18F68804004B2A12 /* videoPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = videoPlay.png; sourceTree = "<group>"; };
-		D3979CCC18F68804004B2A12 /* videoPlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoPlay@2x.png"; sourceTree = "<group>"; };
 		D3979CCD18F68804004B2A12 /* 下载按钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下载按钮.png"; sourceTree = "<group>"; };
 		D3979CCE18F68804004B2A12 /* 下载按钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下载按钮@2x.png"; sourceTree = "<group>"; };
-		D3979CCF18F68804004B2A12 /* 下部播放按钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下部播放按钮.png"; sourceTree = "<group>"; };
-		D3979CD018F68804004B2A12 /* 下部播放按钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下部播放按钮@2x.png"; sourceTree = "<group>"; };
 		D3979CD118F68804004B2A12 /* 总时间条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "总时间条.png"; sourceTree = "<group>"; };
 		D3979CD218F68804004B2A12 /* 总时间条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "总时间条@2x.png"; sourceTree = "<group>"; };
 		D3979CD318F68804004B2A12 /* 播放拖动钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放拖动钮.png"; sourceTree = "<group>"; };
 		D3979CD418F68804004B2A12 /* 播放拖动钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放拖动钮@2x.png"; sourceTree = "<group>"; };
 		D3979CD518F68804004B2A12 /* 播放进度条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放进度条.png"; sourceTree = "<group>"; };
 		D3979CD618F68804004B2A12 /* 播放进度条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放进度条@2x.png"; sourceTree = "<group>"; };
-		D3979CD718F68804004B2A12 /* 暂停按钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "暂停按钮.png"; sourceTree = "<group>"; };
-		D3979CD818F68804004B2A12 /* 暂停按钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "暂停按钮@2x.png"; sourceTree = "<group>"; };
 		D3979CD918F68804004B2A12 /* 缓存条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "缓存条.png"; sourceTree = "<group>"; };
 		D3979CDA18F68804004B2A12 /* 缓存条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "缓存条@2x.png"; sourceTree = "<group>"; };
-		D3979CDB18F68804004B2A12 /* 视频播放按钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "视频播放按钮.png"; sourceTree = "<group>"; };
-		D3979CDC18F68804004B2A12 /* 视频播放按钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "视频播放按钮@2x.png"; sourceTree = "<group>"; };
-		D3979CDD18F68804004B2A12 /* 视频背景_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "视频背景_1.png"; sourceTree = "<group>"; };
-		D3979CDE18F68804004B2A12 /* 视频背景_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "视频背景_1@2x.png"; sourceTree = "<group>"; };
-		D3979CDF18F68804004B2A12 /* 选项背景.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选项背景.png"; sourceTree = "<group>"; };
-		D3979CE018F68804004B2A12 /* 选项背景@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选项背景@2x.png"; sourceTree = "<group>"; };
 		D3979CF718F6C7C3004B2A12 /* 返回箭头.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回箭头.png"; sourceTree = "<group>"; };
 		D3979CF818F6C7C3004B2A12 /* 返回箭头@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回箭头@2x.png"; sourceTree = "<group>"; };
 		D3A6905018EBF1BF000029B8 /* WYVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WYVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +106,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D309673518FB872C008D6417 /* QuartzCore.framework in Frameworks */,
+				D309673318FB8727008D6417 /* CFNetwork.framework in Frameworks */,
 				D3A6905618EBF1BF000029B8 /* CoreGraphics.framework in Frameworks */,
 				D3A6905818EBF1BF000029B8 /* UIKit.framework in Frameworks */,
 				D3A6905418EBF1BF000029B8 /* Foundation.framework in Frameworks */,
@@ -152,28 +134,16 @@
 				D321AADF18FAAAB60038533F /* loadingImage@2x.png */,
 				D3979CF718F6C7C3004B2A12 /* 返回箭头.png */,
 				D3979CF818F6C7C3004B2A12 /* 返回箭头@2x.png */,
-				D3979CCB18F68804004B2A12 /* videoPlay.png */,
-				D3979CCC18F68804004B2A12 /* videoPlay@2x.png */,
 				D3979CCD18F68804004B2A12 /* 下载按钮.png */,
 				D3979CCE18F68804004B2A12 /* 下载按钮@2x.png */,
-				D3979CCF18F68804004B2A12 /* 下部播放按钮.png */,
-				D3979CD018F68804004B2A12 /* 下部播放按钮@2x.png */,
 				D3979CD118F68804004B2A12 /* 总时间条.png */,
 				D3979CD218F68804004B2A12 /* 总时间条@2x.png */,
 				D3979CD318F68804004B2A12 /* 播放拖动钮.png */,
 				D3979CD418F68804004B2A12 /* 播放拖动钮@2x.png */,
 				D3979CD518F68804004B2A12 /* 播放进度条.png */,
 				D3979CD618F68804004B2A12 /* 播放进度条@2x.png */,
-				D3979CD718F68804004B2A12 /* 暂停按钮.png */,
-				D3979CD818F68804004B2A12 /* 暂停按钮@2x.png */,
 				D3979CD918F68804004B2A12 /* 缓存条.png */,
 				D3979CDA18F68804004B2A12 /* 缓存条@2x.png */,
-				D3979CDB18F68804004B2A12 /* 视频播放按钮.png */,
-				D3979CDC18F68804004B2A12 /* 视频播放按钮@2x.png */,
-				D3979CDD18F68804004B2A12 /* 视频背景_1.png */,
-				D3979CDE18F68804004B2A12 /* 视频背景_1@2x.png */,
-				D3979CDF18F68804004B2A12 /* 选项背景.png */,
-				D3979CE018F68804004B2A12 /* 选项背景@2x.png */,
 			);
 			name = "图片";
 			path = "视频播放";
@@ -203,6 +173,8 @@
 		D3A6905218EBF1BF000029B8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D309673418FB872C008D6417 /* QuartzCore.framework */,
+				D309673218FB8727008D6417 /* CFNetwork.framework */,
 				D3A6905318EBF1BF000029B8 /* Foundation.framework */,
 				D3A6905518EBF1BF000029B8 /* CoreGraphics.framework */,
 				D3A6905718EBF1BF000029B8 /* UIKit.framework */,
@@ -341,34 +313,22 @@
 			files = (
 				D3D5E91918F4D7FF0096D3B6 /* TODO.md in Resources */,
 				D3979CE918F68804004B2A12 /* 播放拖动钮.png in Resources */,
-				D3979CE618F68804004B2A12 /* 下部播放按钮@2x.png in Resources */,
 				D3A6906C18EBF1BF000029B8 /* Images.xcassets in Resources */,
 				D3979CF918F6C7C3004B2A12 /* 返回箭头.png in Resources */,
-				D3979CE518F68804004B2A12 /* 下部播放按钮.png in Resources */,
 				D3A6905E18EBF1BF000029B8 /* InfoPlist.strings in Resources */,
 				D3979CEC18F68804004B2A12 /* 播放进度条@2x.png in Resources */,
-				D3979CF118F68804004B2A12 /* 视频播放按钮.png in Resources */,
 				D321AAE118FAAAB60038533F /* loadingImage@2x.png in Resources */,
-				D3979CEE18F68804004B2A12 /* 暂停按钮@2x.png in Resources */,
-				D3979CE118F68804004B2A12 /* videoPlay.png in Resources */,
-				D3979CE218F68804004B2A12 /* videoPlay@2x.png in Resources */,
 				D3979CEB18F68804004B2A12 /* 播放进度条.png in Resources */,
-				D3979CF418F68804004B2A12 /* 视频背景_1@2x.png in Resources */,
-				D3979CF318F68804004B2A12 /* 视频背景_1.png in Resources */,
 				D3979CEF18F68804004B2A12 /* 缓存条.png in Resources */,
-				D3979CED18F68804004B2A12 /* 暂停按钮.png in Resources */,
 				D3979CEA18F68804004B2A12 /* 播放拖动钮@2x.png in Resources */,
 				D321AAE018FAAAB60038533F /* loadingImage.png in Resources */,
-				D3979CF218F68804004B2A12 /* 视频播放按钮@2x.png in Resources */,
 				D3A6906718EBF1BF000029B8 /* Main.storyboard in Resources */,
 				D3979CE718F68804004B2A12 /* 总时间条.png in Resources */,
 				D3979CE318F68804004B2A12 /* 下载按钮.png in Resources */,
 				D3979CE818F68804004B2A12 /* 总时间条@2x.png in Resources */,
 				D3979CFA18F6C7C3004B2A12 /* 返回箭头@2x.png in Resources */,
 				D3979CE418F68804004B2A12 /* 下载按钮@2x.png in Resources */,
-				D3979CF518F68804004B2A12 /* 选项背景.png in Resources */,
 				D3979CF018F68804004B2A12 /* 缓存条@2x.png in Resources */,
-				D3979CF618F68804004B2A12 /* 选项背景@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,10 +478,23 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WYVideoPlayer/WYVideoPlayer-Prefix.pch";
 				INFOPLIST_FILE = "WYVideoPlayer/WYVideoPlayer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				OTHER_LDFLAGS = (
+					"-Objc",
+					"-framework",
+					Reveal,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -532,10 +505,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WYVideoPlayer/WYVideoPlayer-Prefix.pch";
 				INFOPLIST_FILE = "WYVideoPlayer/WYVideoPlayer-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

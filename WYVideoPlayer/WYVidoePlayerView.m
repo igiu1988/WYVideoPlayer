@@ -62,10 +62,14 @@ static const NSString *ReadyForDisplayContext;
     playerOriginalBounds = self.bounds;
     playerOriginalCenter = self.center;
     
-//    [self loadAssetFromFile];
-    
+    // 监听设备旋转。如果旋转被用户锁定，系统就不再会发该通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    
+    // 监听应用程序ResignActive通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pause) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(play) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
+
 
 + (Class)layerClass {
     return [AVPlayerLayer class];
@@ -83,7 +87,7 @@ static const NSString *ReadyForDisplayContext;
 - (void)showLoadingView
 {
     if (_loadingView) {
-        [self addSubview:_loadingView];
+        [self insertSubview:_loadingView atIndex:0];
     }
 }
 
@@ -92,9 +96,10 @@ static const NSString *ReadyForDisplayContext;
     [self loadAssetWithURL:url];
 }
 - (void)loadAssetWithURL:(NSURL *)url{
- 
-    
+
     [self showLoadingView];
+    _customActivityIndicatorView.center = self.center;
+    [self insertSubview:_customActivityIndicatorView atIndex:1];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     NSString *tracksKey = @"tracks";
     
@@ -159,6 +164,7 @@ static const NSString *ReadyForDisplayContext;
                 if (_loadingView) {
                     [_loadingView removeFromSuperview];
                 }
+                [_customActivityIndicatorView removeFromSuperview];
             }
         });
         

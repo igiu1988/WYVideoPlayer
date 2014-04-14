@@ -33,23 +33,34 @@
 
 @implementation WYMoviePlayerController
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
-
+    
+    //
     [slider setMaximumTrackImage:[UIImage imageNamed:@"播放进度条"] forState:UIControlStateNormal];
     [slider setMinimumTrackImage:[UIImage imageNamed:@"缓存条"] forState:UIControlStateNormal];
     [slider setThumbImage:[UIImage imageNamed:@"播放拖动钮"] forState:UIControlStateNormal];
     
+    // 对于 ios6 要使用 wantsFullScreenLayout, 这样subview的layout就与ios7一样了
     if ([UIDevice currentDevice].systemVersion.floatValue < 7 ) {
         self.wantsFullScreenLayout = YES;
     }
     
+    [self setupPlayer];
+}
+
+- (void)setupPlayer
+{
     UIImageView *loadingView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.playerView.width, self.playerView.height)];
     loadingView.image = [UIImage imageNamed:@"loadingImage"];
     self.playerView.loadingView = loadingView;
     self.playerView.backgroundColor = [UIColor blackColor];
+    
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [activityIndicator startAnimating];
+    self.playerView.customActivityIndicatorView = activityIndicator;
+    
     [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVidoePlayerView *playerView) {
         if (status == AVPlayerItemStatusReadyToPlay) {
             slider.maximumValue = playerView.duration;
@@ -63,12 +74,12 @@
         slider.value = currentTime;
         currentTimeLabel.text = [NSString stringWithFormat:@"已播放%lld/%lld", currentTime, playerView.duration];
     }];
-
+    
     
     [self.playerView setOrientationWillChangeBlock:^(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angel, WYVidoePlayerView *playerView) {
         
         if (UIInterfaceOrientationIsLandscape(orientationWillChangeTo)) {
-
+            
             [UIView animateWithDuration:animationDuration animations:^{
                 if (topControlView.top == 0) {
                     topControlView.centerY += 20;
@@ -118,6 +129,10 @@
     [_playerView loadURL:url];
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [_playerView pause];
+    [super viewWillDisappear:animated];
+}
 
 #pragma mark - 控制
 - (IBAction)fullScreenAction:(id)sender {
