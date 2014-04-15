@@ -78,8 +78,13 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" id="ArV-5h-2QW">
-                                        <rect key="frame" x="50" y="176" width="231" height="31"/>
+                                        <rect key="frame" x="50" y="165" width="231" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
+                                        <connections>
+                                            <action selector="sliderChange:" destination="rDn-rE-FCM" eventType="valueChanged" id="jX1-Cq-Xam"/>
+                                            <action selector="sliderChangeBegin:" destination="rDn-rE-FCM" eventType="touchDown" id="HRC-U8-sk3"/>
+                                            <action selector="sliderChangeFinish:" destination="rDn-rE-FCM" eventType="touchUpInside" id="FtY-9H-yLJ"/>
+                                        </connections>
                                     </slider>
                                     <view contentMode="scaleToFill" id="55f-U2-GHs" userLabel="Top control view">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
@@ -142,6 +147,26 @@
                                 <color key="textColor" red="1" green="0.30533705300000002" blue="0.22704043700000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="a10-Ck-p4q">
+                                <rect key="frame" x="162" y="269" width="100" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="cancel loading">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelLoading:" destination="rDn-rE-FCM" eventType="touchUpInside" id="22d-Xs-rkd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fTt-Wn-PES">
+                                <rect key="frame" x="20" y="378" width="123" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="模仿变成3G情况">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="simulateWWAN:" destination="rDn-rE-FCM" eventType="touchUpInside" id="v6B-WC-5Fr"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <color key="tintColor" red="0.1489864588" green="0.4663141348" blue="0.84867527170000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -160,7 +185,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7MK-55-4fz" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="406" y="235"/>
+            <point key="canvasLocation" x="348" y="223"/>
         </scene>
     </scenes>
     <resources>

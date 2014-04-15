@@ -125,7 +125,9 @@
     
     //    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/IMG_0313.MOV"];
     //    NSURL *url = [NSURL fileURLWithPath:path];
-    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+    // http://v.yingshibao.chuanke.com/CET4_video/4001_zongshu_I.mp4
+    // http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8
+    NSURL *url = [NSURL URLWithString:@"http://v.yingshibao.chuanke.com/CET4_video/4001_zongshu_I.mp4"];
     [_playerView loadURL:url];
 }
 
@@ -137,6 +139,9 @@
 #pragma mark - 控制
 - (IBAction)fullScreenAction:(id)sender {
     [_playerView fullScreen];
+}
+- (IBAction)cancelLoading:(id)sender {
+    // TODO: 
 }
 
 - (IBAction)play:sender
@@ -160,22 +165,19 @@
     
 }
 
+
 - (void)hideSubviewGestureAction
 {
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
         if ([UIApplication sharedApplication].statusBarHidden) {
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
             [UIView animateWithDuration:0.15 animations:^{
-                for (UIView *view in _playerView.subviews) {
-                    view.alpha = 1;
-                }
+                slider.alpha = 1;
             }];
         }else{
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
             [UIView animateWithDuration:0.15 animations:^{
-                for (UIView *view in _playerView.subviews) {
-                    view.alpha = 0;
-                }
+                slider.alpha = 0;
             }];
         }
         
@@ -185,20 +187,33 @@
             UIView *view = _playerView.subviews[0];
             if (view.alpha) {
                 [UIView animateWithDuration:0.15 animations:^{
-                    for (UIView *view in _playerView.subviews) {
-                        view.alpha = 0;
-                    }
+                    slider.alpha = 0;
                 }];
             }else{
                 [UIView animateWithDuration:0.15 animations:^{
-                    for (UIView *view in _playerView.subviews) {
-                        view.alpha = 1;
-                    }
+                    slider.alpha = 1;
                 }];
             }
         }
     }
 }
+
+// 滑动块在滑动时要先暂停，然后改变时间，结束时要播放。如果不先暂停，slider会有乱串的现象
+- (IBAction)sliderChangeBegin:(id)sender {
+    [_playerView pause];
+}
+
+- (IBAction)sliderChange:(UISlider *)sender {
+    _playerView.currentTime = sender.value;
+}
+- (IBAction)sliderChangeFinish:(id)sender {
+    [_playerView play];
+}
+
+- (IBAction)simulateWWAN:(id)sender {
+    [_playerView networkChange];
+}
+
 #pragma mark - 旋转
 /*
  TODO:

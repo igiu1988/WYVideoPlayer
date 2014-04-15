@@ -7,6 +7,8 @@
 //
 
 #import "WYVidoePlayerView.h"
+#import "AFNetworkReachabilityManager.h"
+
 @interface WYVidoePlayerView ()
 {
     AVPlayer *player;
@@ -23,6 +25,7 @@
     id periodicTimeObserver;
     
 //    BOOL subViewHide;
+    AFNetworkReachabilityManager *networkReachabilityManager;
 }
 
 
@@ -68,6 +71,29 @@ static const NSString *ReadyForDisplayContext;
     // 监听应用程序ResignActive通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pause) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(play) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    // 监听网络状态
+    networkReachabilityManager = [AFNetworkReachabilityManager managerForDomain:@"www.baidu.com"];
+    [networkReachabilityManager startMonitoring];
+    [networkReachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        if (status == AFNetworkReachabilityStatusReachableViaWWAN) {
+            // 变为手机蜂窝网络，停止加载
+//            playerItem = nil;
+            NSLog(@"AFNetworkReachabilityStatusReachableViaWWAN");
+        }else if  ( status == AFNetworkReachabilityStatusReachableViaWiFi ){
+            // wifi状态，判断player相关状态，看是否需要从某处继续播放
+            NSLog(@"AFNetworkReachabilityStatusReachableViaWiFi");
+        }else{
+            NSLog(@"AFNetworkReachabilityStatusReachable failed");
+            
+        }
+    }];
+    
+}
+
+- (void)networkChange
+{
+    // TODO:
 }
 
 
@@ -87,7 +113,7 @@ static const NSString *ReadyForDisplayContext;
 - (void)showLoadingView
 {
     if (_loadingView) {
-        [self insertSubview:_loadingView atIndex:0];
+        [self insertSubview:_loadingView atIndex:1];
     }
 }
 
@@ -99,7 +125,7 @@ static const NSString *ReadyForDisplayContext;
 
     [self showLoadingView];
     _customActivityIndicatorView.center = self.center;
-    [self insertSubview:_customActivityIndicatorView atIndex:1];
+    [self insertSubview:_customActivityIndicatorView atIndex:2];
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     NSString *tracksKey = @"tracks";
     
@@ -161,10 +187,20 @@ static const NSString *ReadyForDisplayContext;
                 playerItemStatusChangeBlock(playerItem.status, self);
             }
             if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
-                if (_loadingView) {
-                    [_loadingView removeFromSuperview];
-                }
-                [_customActivityIndicatorView removeFromSuperview];
+                [UIView animateWithDuration:0.2 animations:^{
+                    _loadingView.transform = CGAffineTransformMakeScale(3, 3);
+                    _loadingView.alpha = 0;
+                    _customActivityIndicatorView.transform = CGAffineTransformMakeScale(3, 3);
+                    _customActivityIndicatorView.alpha = 0;
+                } completion:^(BOOL finished) {
+                    if (_loadingView) {
+                        [_loadingView removeFromSuperview];
+                    }
+                    [_customActivityIndicatorView removeFromSuperview];
+                }];
+                
+                
+                [self play];
             }
         });
         
@@ -177,6 +213,7 @@ static const NSString *ReadyForDisplayContext;
             float startSeconds = CMTimeGetSeconds(timeRange.start);
             float durationSeconds = CMTimeGetSeconds(timeRange.duration);
             NSTimeInterval result = startSeconds + durationSeconds;
+            NSLog(@"已载入 %f", result);
             if (loadedTimeUpdateBlock) {
                 loadedTimeUpdateBlock(result, self);
             }
@@ -185,7 +222,6 @@ static const NSString *ReadyForDisplayContext;
         return;
     }else if (context == &ItemDurationContext){
         dispatch_async(dispatch_get_main_queue(), ^{
-            //            NSLog(@"presentationSize %@", NSStringFromCGSize([[self.player currentItem] presentationSize]));
             _duration = playerItem.duration.value/playerItem.duration.timescale;
             if (currentTimeUpdateBlock) {
                 currentTimeUpdateBlock(0, self);
@@ -228,6 +264,7 @@ static const NSString *ReadyForDisplayContext;
 
 - (void)stop
 {
+    [networkReachabilityManager stopMonitoring];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
     [player pause];
     [player removeTimeObserver:periodicTimeObserver];
@@ -242,12 +279,30 @@ static const NSString *ReadyForDisplayContext;
     player = nil;
 }
 
+//- (void)cancelLoading
+//{
+//    AVURLAsset *asset = (AVURLAsset *)playerItem.asset;
+//    [asset cancelLoading];
+//}
+
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     [self.player seekToTime:kCMTimeZero];
 }
 
+- (void)setCurrentTime:(int64_t)currentTime
+{
+    CMTime time = CMTimeMake(currentTime, 1);
+    [self.player seekToTime:time];
+}
+
 #pragma mark - 全屏、旋转相关
 - (void)fullScreen{
+    
+    // 在还不能播放的情况下，不允许旋转
+    if (playerItem.status != AVPlayerItemStatusReadyToPlay) {
+        return;
+    }
+    
     
     // 旋转 status bar
     // 旋转 palyer 并正确设置 player size
@@ -267,8 +322,7 @@ static const NSString *ReadyForDisplayContext;
     }else{
         [self changeOrientationTo:UIInterfaceOrientationLandscapeRight rotationAngle:M_PI_2];
     }
-    
-    
+
 }
 
 - (void)changeOrientationTo:(UIInterfaceOrientation)orientation rotationAngle:(double_t)angle
@@ -343,6 +397,4 @@ static const NSString *ReadyForDisplayContext;
 {
     loadedTimeUpdateBlock = block;
 }
-
-
 @end

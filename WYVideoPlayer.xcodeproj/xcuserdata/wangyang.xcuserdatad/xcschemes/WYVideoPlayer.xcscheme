@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D3A6904F18EBF1BF000029B8"
-               BuildableName = "WYVideoPlayer.app"
+               BuildableName = "WYPlayer.app"
                BlueprintName = "WYVideoPlayer"
                ReferencedContainer = "container:WYVideoPlayer.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D3A6904F18EBF1BF000029B8"
-            BuildableName = "WYVideoPlayer.app"
+            BuildableName = "WYPlayer.app"
             BlueprintName = "WYVideoPlayer"
             ReferencedContainer = "container:WYVideoPlayer.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D3A6904F18EBF1BF000029B8"
-            BuildableName = "WYVideoPlayer.app"
+            BuildableName = "WYPlayer.app"
             BlueprintName = "WYVideoPlayer"
             ReferencedContainer = "container:WYVideoPlayer.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D3A6904F18EBF1BF000029B8"
-            BuildableName = "WYVideoPlayer.app"
+            BuildableName = "WYPlayer.app"
             BlueprintName = "WYVideoPlayer"
             ReferencedContainer = "container:WYVideoPlayer.xcodeproj">
          </BuildableReference>

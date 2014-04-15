@@ -42,6 +42,7 @@
 		D3A6908D18EBF1E0000029B8 /* WYVidoePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */; };
 		D3A6909018EBF21A000029B8 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908F18EBF21A000029B8 /* UIView+Utils.m */; };
 		D3D5E91918F4D7FF0096D3B6 /* TODO.md in Resources */ = {isa = PBXBuildFile; fileRef = D3D5E91818F4D7FF0096D3B6 /* TODO.md */; };
+		D3FC038618FCC67B00B8748F /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,7 +74,7 @@
 		D3979CDA18F68804004B2A12 /* 缓存条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "缓存条@2x.png"; sourceTree = "<group>"; };
 		D3979CF718F6C7C3004B2A12 /* 返回箭头.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回箭头.png"; sourceTree = "<group>"; };
 		D3979CF818F6C7C3004B2A12 /* 返回箭头@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回箭头@2x.png"; sourceTree = "<group>"; };
-		D3A6905018EBF1BF000029B8 /* WYVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WYVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3A6905018EBF1BF000029B8 /* WYPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WYPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3A6905318EBF1BF000029B8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D3A6905518EBF1BF000029B8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D3A6905718EBF1BF000029B8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -99,6 +100,8 @@
 		D3A6908E18EBF21A000029B8 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		D3A6908F18EBF21A000029B8 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
 		D3D5E91818F4D7FF0096D3B6 /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
+		D3FC038418FCC67B00B8748F /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
+		D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,7 +167,7 @@
 		D3A6905118EBF1BF000029B8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D3A6905018EBF1BF000029B8 /* WYVideoPlayer.app */,
+				D3A6905018EBF1BF000029B8 /* WYPlayer.app */,
 				D3A6907118EBF1BF000029B8 /* WYVideoPlayerTests.xctest */,
 			);
 			name = Products;
@@ -186,6 +189,8 @@
 		D3A6905918EBF1BF000029B8 /* WYVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D3FC038418FCC67B00B8748F /* AFNetworkReachabilityManager.h */,
+				D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */,
 				D3A6908E18EBF21A000029B8 /* UIView+Utils.h */,
 				D3A6908F18EBF21A000029B8 /* UIView+Utils.m */,
 				D3A6906218EBF1BF000029B8 /* WYAppDelegate.h */,
@@ -251,7 +256,7 @@
 			);
 			name = WYVideoPlayer;
 			productName = WYVideoPlayer;
-			productReference = D3A6905018EBF1BF000029B8 /* WYVideoPlayer.app */;
+			productReference = D3A6905018EBF1BF000029B8 /* WYPlayer.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D3A6907018EBF1BF000029B8 /* WYVideoPlayerTests */ = {
@@ -353,6 +358,7 @@
 				D3A6906018EBF1BF000029B8 /* main.m in Sources */,
 				D386685A18F7AE0100517FF8 /* WYTableViewController.m in Sources */,
 				D3A6908D18EBF1E0000029B8 /* WYVidoePlayerView.m in Sources */,
+				D3FC038618FCC67B00B8748F /* AFNetworkReachabilityManager.m in Sources */,
 				D3A6906A18EBF1BF000029B8 /* WYViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -490,12 +496,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				OTHER_LDFLAGS = (
-					"-Objc",
-					"-framework",
-					Reveal,
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = WYPlayer;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -518,7 +520,7 @@
 					"$(PROJECT_DIR)",
 				);
 				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = WYPlayer;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
