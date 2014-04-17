@@ -8,9 +8,13 @@
 
 #import "WYVidoePlayerView.h"
 #import "AFNetworkReachabilityManager.h"
+#import <CommonCrypto/CommonDigest.h>
 
-@interface WYVidoePlayerView ()
+
+@interface WYVidoePlayerView () <UIAlertViewDelegate>
 {
+    NSURL *videoURL;
+    
     AVPlayer *player;
     AVPlayerItem *playerItem;
     
@@ -22,6 +26,8 @@
     void(^currentTimeUpdateBlock)(int64_t currentTime, WYVidoePlayerView *playerView);
     void(^orientationWillChangeBlock)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVidoePlayerView *playerView);
     void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVidoePlayerView *playerView);
+    void (^needShowActivityIndicatorViewBlock)(BOOL shouldShow, WYVidoePlayerView *playerView);
+    
     id periodicTimeObserver;
     
 //    BOOL subViewHide;
@@ -37,6 +43,8 @@ static const NSString *ItemLoadedTimeContext;
 static const NSString *ItemDurationContext;
 static const NSString *PlayerViewFrameContext;
 static const NSString *ReadyForDisplayContext;
+static const NSString *ItemPlaybackLikelyToKeepUpContext;
+static const NSString *ItemPlaybackBufferEmptyContext;
 @implementation WYVidoePlayerView
 
 #pragma mark - 初始化
@@ -75,25 +83,27 @@ static const NSString *ReadyForDisplayContext;
     // 监听网络状态
     networkReachabilityManager = [AFNetworkReachabilityManager managerForDomain:@"www.baidu.com"];
     [networkReachabilityManager startMonitoring];
+    
+    // 变为3G网络时，给个暂停，但是其实还是在继续加载的，这个控制不了。提示用户选择继续播放，或者停止，停止了，那就真停止了，显示loadingView
+//    AVPlayerItem *weakItem = playerItem;
+    AVPlayer *weakPlayer = player;
     [networkReachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusReachableViaWWAN) {
             // 变为手机蜂窝网络，停止加载
 //            playerItem = nil;
-            NSLog(@"AFNetworkReachabilityStatusReachableViaWWAN");
         }else if  ( status == AFNetworkReachabilityStatusReachableViaWiFi ){
-            // wifi状态，判断player相关状态，看是否需要从某处继续播放
-            NSLog(@"AFNetworkReachabilityStatusReachableViaWiFi");
+            // TODO: 从 last time 处开始播放
+            if (weakPlayer) {
+                [weakPlayer play];
+            }
+            
         }else{
             NSLog(@"AFNetworkReachabilityStatusReachable failed");
             
         }
     }];
     
-}
-
-- (void)networkChange
-{
-    // TODO:
+    _useLastPlayedTime = YES;
 }
 
 
@@ -119,13 +129,16 @@ static const NSString *ReadyForDisplayContext;
 
 - (void)loadURL:(NSURL *)url
 {
+    videoURL = url;
+    
     [self loadAssetWithURL:url];
 }
 - (void)loadAssetWithURL:(NSURL *)url{
 
     [self showLoadingView];
-    _customActivityIndicatorView.center = self.center;
-    [self insertSubview:_customActivityIndicatorView atIndex:2];
+    if (needShowActivityIndicatorViewBlock) {
+        needShowActivityIndicatorViewBlock(YES, self);
+    }
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:url options:nil];
     NSString *tracksKey = @"tracks";
     
@@ -140,6 +153,7 @@ static const NSString *ReadyForDisplayContext;
                             if (status == AVKeyValueStatusLoaded) {
                                 
                                 playerItem = [AVPlayerItem playerItemWithAsset:asset];
+                                
                                 // ensure that this is done before the playerItem is associated with the player
                                 [playerItem addObserver:self forKeyPath:@"status"
                                                 options:NSKeyValueObservingOptionInitial context:&ItemStatusContext];
@@ -147,6 +161,12 @@ static const NSString *ReadyForDisplayContext;
                                                 options:NSKeyValueObservingOptionNew context:&ItemLoadedTimeContext];
                                 [playerItem addObserver:self forKeyPath:@"duration"
                                                 options:NSKeyValueObservingOptionNew context:&ItemDurationContext];
+                                [playerItem addObserver:self forKeyPath:@"playbackLikelyToKeepUp" options:NSKeyValueObservingOptionNew context:&ItemPlaybackLikelyToKeepUpContext];
+                                [playerItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:NSKeyValueObservingOptionNew context:&ItemPlaybackBufferEmptyContext];
+                                
+                                if (_useLastPlayedTime) {
+                                    [playerItem seekToTime:CMTimeMakeWithSeconds(self.lastPlayedTime, 1)];
+                                }
                                 
                                 // 播放结束时的通知
                                 
@@ -161,6 +181,7 @@ static const NSString *ReadyForDisplayContext;
                                 
                                 // 每0.1秒更新一次
                                 periodicTimeObserver = [self.player addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
+                                    _currentTime = time.value / time.timescale;
                                     if (currentTimeUpdateBlock) {
                                         currentTimeUpdateBlock((time.value)/time.timescale, self);
                                     }
@@ -187,16 +208,17 @@ static const NSString *ReadyForDisplayContext;
                 playerItemStatusChangeBlock(playerItem.status, self);
             }
             if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
+                if (needShowActivityIndicatorViewBlock){
+                    needShowActivityIndicatorViewBlock(NO, self);
+                }
                 [UIView animateWithDuration:0.2 animations:^{
                     _loadingView.transform = CGAffineTransformMakeScale(3, 3);
                     _loadingView.alpha = 0;
-                    _customActivityIndicatorView.transform = CGAffineTransformMakeScale(3, 3);
-                    _customActivityIndicatorView.alpha = 0;
                 } completion:^(BOOL finished) {
                     if (_loadingView) {
                         [_loadingView removeFromSuperview];
                     }
-                    [_customActivityIndicatorView removeFromSuperview];
+                    
                 }];
                 
                 
@@ -236,6 +258,27 @@ static const NSString *ReadyForDisplayContext;
         return;
     }else if (context == &ReadyForDisplayContext){
         
+        
+        return;
+    }else if (context == &ItemPlaybackBufferEmptyContext){
+        if( playerItem.playbackBufferEmpty ){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (needShowActivityIndicatorViewBlock){
+                    needShowActivityIndicatorViewBlock(YES, self);
+                }
+            });
+        }
+        return;
+    }else if (context == &ItemPlaybackLikelyToKeepUpContext){
+        if(playerItem.playbackLikelyToKeepUp){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [player play];
+                if (needShowActivityIndicatorViewBlock){
+                    needShowActivityIndicatorViewBlock(NO, self);
+                }
+            });
+        }
+
         return;
     }
     
@@ -260,22 +303,33 @@ static const NSString *ReadyForDisplayContext;
 - (void)pause
 {
     [player pause];
+    
+    // 记录播放位置
+    [self saveLastPlayTime];
 }
 
 - (void)stop
 {
+    
     [networkReachabilityManager stopMonitoring];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-    [player pause];
-    [player removeTimeObserver:periodicTimeObserver];
-
-    [playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
-    [playerItem removeObserver:self forKeyPath:@"loadedTimeRanges" context:&ItemLoadedTimeContext];
-    [playerItem removeObserver:self forKeyPath:@"duration" context:&ItemDurationContext];
-    [self removeObserver:self forKeyPath:@"frame" context:&PlayerViewFrameContext];
-    [self.layer removeObserver:self forKeyPath:@"readyForDisplay" context:&ReadyForDisplayContext];
-    playerItem = nil;
+    [self pause];
     
+    // 如果asset没有成功载入，这个监听肯定都没有注册，也就不需要remove，强制remove会导致程序崩溃
+    if (playerItem){
+        [player removeTimeObserver:periodicTimeObserver];
+        [playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
+        [playerItem removeObserver:self forKeyPath:@"loadedTimeRanges" context:&ItemLoadedTimeContext];
+        [playerItem removeObserver:self forKeyPath:@"duration" context:&ItemDurationContext];
+        [playerItem removeObserver:self forKeyPath:@"playbackBufferEmpty" context:&ItemPlaybackBufferEmptyContext];
+        [playerItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp" context:&ItemPlaybackLikelyToKeepUpContext];
+        [self.layer removeObserver:self forKeyPath:@"readyForDisplay" context:&ReadyForDisplayContext];
+    }
+    
+
+    [self removeObserver:self forKeyPath:@"frame" context:&PlayerViewFrameContext];
+
+    playerItem = nil;
     player = nil;
 }
 
@@ -397,4 +451,58 @@ static const NSString *ReadyForDisplayContext;
 {
     loadedTimeUpdateBlock = block;
 }
+
+- (void)setNeedShowActivityIndicatorViewBlock:(void (^)(BOOL shouldShow, WYVidoePlayerView *playerView))block
+{
+    needShowActivityIndicatorViewBlock = block;
+}
+
+
+#pragma mark - 记住最后的播放时间
+#define CACHE_FILE_NAME         @"videoPlayTimeCache"
+- (NSString *)md5:(NSString *)string;
+{
+    const char *original_str = [string UTF8String];
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(original_str, (uint32_t)strlen(original_str), result);
+    NSMutableString *hash = [NSMutableString string];
+    for (int i = 0; i < 16; i++)
+        [hash appendFormat:@"%02X", result[i]];
+    return [hash uppercaseString];
+}
+
+// 这里会特意的把时间做一个调整，感觉这样有助于用户回忆起上次播放到哪儿
+- (void)saveLastPlayTime;
+{
+    NSString *cache = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
+    NSString *filePath = [cache stringByAppendingPathComponent:CACHE_FILE_NAME];
+    NSMutableDictionary *cacheDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
+    if(!cacheDictionary){
+        cacheDictionary = [NSMutableDictionary dictionary];
+    }
+    NSString *key = [self md5:videoURL.absoluteString];
+    
+    if (_currentTime < 10) {
+        cacheDictionary[key] = @(0);
+    }else{
+        cacheDictionary[key] = @(_currentTime - 3);
+    }
+    
+    
+    
+    [cacheDictionary writeToFile:filePath atomically:YES];
+}
+
+
+- (int64_t)lastPlayedTime{
+    NSString *cache = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
+    NSString *filePath = [cache stringByAppendingPathComponent:CACHE_FILE_NAME];
+    NSMutableDictionary *cacheDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
+
+    NSString *key = [self md5:videoURL.absoluteString];
+    NSNumber *time = cacheDictionary[key];
+    return [time longLongValue];
+}
+
+
 @end

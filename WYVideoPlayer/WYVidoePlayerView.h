@@ -36,24 +36,18 @@
  *  当前正要播放的视频最后一次播放的时间点，再次播放该视频时，播放器会从该时间点开始。
  *  如果上一次视频已播放结束，那么lastPlayedTime为0
  *  如果useLastPlayedTime为NO，该属性失效
+ *  会创建一个plist文件，以视频md5(fileURL)作为key，以播放的秒数作为value
  */
 @property (readonly, nonatomic) int64_t lastPlayedTime;
 
+// 默认是YES
 @property (assign, nonatomic) BOOL useLastPlayedTime;
 
-///**
-// *  默认是黑色
-// */
-//@property (nonatomic, strong) UIColor *backgroundColor;
 
 /**
  *  默认在加载时什么也不显示。一般来说是一个图片，播放器会自动将customActivityIndicatorView显示在loadingView中间
  */
 @property (nonatomic, strong) UIView *loadingView;
-/**
- *  当没有网络时，或者需要缓冲时要显示的ActivityIndicatorView
- */
-@property (nonatomic, strong) UIView *customActivityIndicatorView;
 
 /**
  *  载入视频，可以是fileURL，或者是neturl
@@ -69,15 +63,14 @@
 
 // 只在view controller pop时调用
 - (void)stop;
-//- (void)cancelLoading;
+
+
 - (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVidoePlayerView *playerView))block;
 - (void)setCurrentTimeUpdateBlock:(void(^)(int64_t currentTime, WYVidoePlayerView *playerView))block;
 - (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVidoePlayerView *playerView))block;
 - (void)setLoadedTimeUpdateBlock:(void(^)(int64_t loadTime, WYVidoePlayerView *playerView))block;
-
-- (void)networkChange;
+- (void)setNeedShowActivityIndicatorViewBlock:(void (^)(BOOL shouldShow, WYVidoePlayerView *playerView))block;
 @end
-
 
 
 

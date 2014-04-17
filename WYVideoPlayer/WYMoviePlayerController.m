@@ -27,6 +27,8 @@
     
     // for test
     __weak IBOutlet UILabel *loadingProgressLabel;
+    
+    UIActivityIndicatorView *activityIndicator;
 }
 @end
 // TODO: 在视频加载时，应该有一个默认图片显示，并且有一个小圈在转
@@ -37,15 +39,23 @@
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     
-    //
-    [slider setMaximumTrackImage:[UIImage imageNamed:@"播放进度条"] forState:UIControlStateNormal];
-    [slider setMinimumTrackImage:[UIImage imageNamed:@"缓存条"] forState:UIControlStateNormal];
+    [UIActivityIndicatorView appearance].color = [UIColor redColor];
+    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicator.center = self.playerView.center;
+    [self.playerView addSubview:activityIndicator];
+    
+    [slider setMaximumTrackImage:[UIImage imageNamed:@"缓存条"] forState:UIControlStateNormal];
+    [slider setMinimumTrackImage:[UIImage imageNamed:@"播放进度条"] forState:UIControlStateNormal];
     [slider setThumbImage:[UIImage imageNamed:@"播放拖动钮"] forState:UIControlStateNormal];
     
     // 对于 ios6 要使用 wantsFullScreenLayout, 这样subview的layout就与ios7一样了
     if ([UIDevice currentDevice].systemVersion.floatValue < 7 ) {
         self.wantsFullScreenLayout = YES;
     }
+    
+    playButton.enabled = NO;
+    slider.enabled = NO;
+    fullScreenButton.enabled = NO;
     
     [self setupPlayer];
 }
@@ -57,16 +67,13 @@
     self.playerView.loadingView = loadingView;
     self.playerView.backgroundColor = [UIColor blackColor];
     
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [activityIndicator startAnimating];
-    self.playerView.customActivityIndicatorView = activityIndicator;
-    
     [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVidoePlayerView *playerView) {
         if (status == AVPlayerItemStatusReadyToPlay) {
             slider.maximumValue = playerView.duration;
             playButton.enabled = YES;
-        }else{
-            playButton.enabled = NO;
+            slider.enabled = YES;
+            fullScreenButton.enabled = YES;
+            [playButton setTitle:@"暂停" forState:UIControlStateNormal];
         }
     }];
     
@@ -108,6 +115,14 @@
     
     [self.playerView setLoadedTimeUpdateBlock:^(int64_t loadTime, WYVidoePlayerView *playerView) {
         loadingProgressLabel.text = [NSString stringWithFormat:@"已加载%lld / %lld", loadTime, playerView.duration];
+    }];
+    
+    [self.playerView setNeedShowActivityIndicatorViewBlock:^(BOOL shouldShow, WYVidoePlayerView *playerView) {
+        if (shouldShow){
+            [activityIndicator startAnimating];
+        }else{
+            [activityIndicator stopAnimating];
+        }
     }];
     
     playerOriginalBounds = _playerView.bounds;
@@ -208,10 +223,6 @@
 }
 - (IBAction)sliderChangeFinish:(id)sender {
     [_playerView play];
-}
-
-- (IBAction)simulateWWAN:(id)sender {
-    [_playerView networkChange];
 }
 
 #pragma mark - 旋转

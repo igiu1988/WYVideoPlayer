@@ -157,16 +157,6 @@
                                     <action selector="cancelLoading:" destination="rDn-rE-FCM" eventType="touchUpInside" id="22d-Xs-rkd"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fTt-Wn-PES">
-                                <rect key="frame" x="20" y="378" width="123" height="38"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="模仿变成3G情况">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="simulateWWAN:" destination="rDn-rE-FCM" eventType="touchUpInside" id="v6B-WC-5Fr"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <color key="tintColor" red="0.1489864588" green="0.4663141348" blue="0.84867527170000001" alpha="1" colorSpace="calibratedRGB"/>
