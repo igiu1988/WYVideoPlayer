@@ -15,7 +15,7 @@
 {
     NSURL *videoURL;
     
-    AVPlayer *player;
+//    AVPlayer *player;
     AVPlayerItem *playerItem;
     
     CGPoint playerOriginalCenter;
@@ -32,6 +32,8 @@
     
 //    BOOL subViewHide;
     AFNetworkReachabilityManager *networkReachabilityManager;
+    
+    BOOL isPauseByUser;
 }
 
 
@@ -67,6 +69,18 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     return self;
 }
 
+- (void)ApplicationWillResignActive
+{
+    [self.player pause];
+}
+
+- (void)ApplicationDidBecomeActive
+{
+    if (!isPauseByUser) {
+        [self play];
+    }
+}
+
 - (void)doInit
 {
     [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:&PlayerViewFrameContext];
@@ -77,25 +91,29 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
     
     // 监听应用程序ResignActive通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pause) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(play) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ApplicationWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ApplicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     // 监听网络状态
     networkReachabilityManager = [AFNetworkReachabilityManager managerForDomain:@"www.baidu.com"];
     [networkReachabilityManager startMonitoring];
     
     // 变为3G网络时，给个暂停，但是其实还是在继续加载的，这个控制不了。提示用户选择继续播放，或者停止，停止了，那就真停止了，显示loadingView
-//    AVPlayerItem *weakItem = playerItem;
-    AVPlayer *weakPlayer = player;
+    __weak WYVidoePlayerView *weakSelf = self;
     [networkReachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusReachableViaWWAN) {
-            // 变为手机蜂窝网络，停止加载
+            // TODO: 变为手机蜂窝网络，停止加载
 //            playerItem = nil;
         }else if  ( status == AFNetworkReachabilityStatusReachableViaWiFi ){
             // TODO: 从 last time 处开始播放
-            if (weakPlayer) {
-                [weakPlayer play];
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                AVPlayer *weakPlayer = [weakSelf valueForKey:@"player"];
+                if (!weakPlayer) {
+                    [weakSelf loadAssetWithURL:[weakSelf valueForKey:@"videoURL"]];
+                }else{
+                    [weakPlayer play];
+                }
+            });
             
         }else{
             NSLog(@"AFNetworkReachabilityStatusReachable failed");
@@ -131,7 +149,7 @@ static const NSString *ItemPlaybackBufferEmptyContext;
 {
     videoURL = url;
     
-    [self loadAssetWithURL:url];
+//    [self loadAssetWithURL:url];
 }
 - (void)loadAssetWithURL:(NSURL *)url{
 
@@ -174,8 +192,8 @@ static const NSString *ItemPlaybackBufferEmptyContext;
                                                                          selector:@selector(playerItemDidReachEnd:)
                                                                              name:AVPlayerItemDidPlayToEndTimeNotification
                                                                            object:playerItem];
-                                player = [AVPlayer playerWithPlayerItem:playerItem];
-                                [self setPlayer:player];
+                                self.player = [AVPlayer playerWithPlayerItem:playerItem];
+//                                [self setPlayer:player];
                                 [self.layer addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionNew context:&ReadyForDisplayContext];
                                 
                                 
@@ -221,8 +239,10 @@ static const NSString *ItemPlaybackBufferEmptyContext;
                     
                 }];
                 
+                if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive){
+                    [self play];
+                }
                 
-                [self play];
             }
         });
         
@@ -261,6 +281,7 @@ static const NSString *ItemPlaybackBufferEmptyContext;
         
         return;
     }else if (context == &ItemPlaybackBufferEmptyContext){
+        NSLog(@"ItemPlaybackBufferEmptyContext %@", playerItem.playbackBufferEmpty ? @"YES":@"NO");
         if( playerItem.playbackBufferEmpty ){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (needShowActivityIndicatorViewBlock){
@@ -270,14 +291,25 @@ static const NSString *ItemPlaybackBufferEmptyContext;
         }
         return;
     }else if (context == &ItemPlaybackLikelyToKeepUpContext){
+        NSLog(@"ItemPlaybackLikelyToKeepUpContext %@", playerItem.playbackLikelyToKeepUp ? @"YES":@"NO");
         if(playerItem.playbackLikelyToKeepUp){
             dispatch_async(dispatch_get_main_queue(), ^{
-                [player play];
+                // TODO: ItemPlaybackLikelyToKeepUpContext这个observer的执行事件有问题
+
+//                [self.player play];
                 if (needShowActivityIndicatorViewBlock){
                     needShowActivityIndicatorViewBlock(NO, self);
                 }
             });
         }
+//        else{
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                
+//                if (needShowActivityIndicatorViewBlock){
+//                    needShowActivityIndicatorViewBlock(NO, self);
+//                }
+//            });
+//        }
 
         return;
     }
@@ -289,21 +321,24 @@ static const NSString *ItemPlaybackBufferEmptyContext;
 
 #pragma mark - 控制
 - (float)rate{
-    return player.rate;
+    return self.player.rate;
 }
 - (void)setRate:(float)rate
 {
-    player.rate = rate;
+    self.player.rate = rate;
 }
 
 - (void)play
 {
-    [player play];
+    
+    [self.player play];
+    isPauseByUser = NO;
+    
 }
 - (void)pause
 {
-    [player pause];
-    
+    [self.player pause];
+    isPauseByUser = YES;
     // 记录播放位置
     [self saveLastPlayTime];
 }
@@ -317,7 +352,7 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     
     // 如果asset没有成功载入，这个监听肯定都没有注册，也就不需要remove，强制remove会导致程序崩溃
     if (playerItem){
-        [player removeTimeObserver:periodicTimeObserver];
+        [self.player removeTimeObserver:periodicTimeObserver];
         [playerItem removeObserver:self forKeyPath:@"status" context:&ItemStatusContext];
         [playerItem removeObserver:self forKeyPath:@"loadedTimeRanges" context:&ItemLoadedTimeContext];
         [playerItem removeObserver:self forKeyPath:@"duration" context:&ItemDurationContext];
@@ -330,23 +365,25 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     [self removeObserver:self forKeyPath:@"frame" context:&PlayerViewFrameContext];
 
     playerItem = nil;
-    player = nil;
+    self.player = nil;
 }
 
-//- (void)cancelLoading
-//{
-//    AVURLAsset *asset = (AVURLAsset *)playerItem.asset;
-//    [asset cancelLoading];
-//}
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     [self.player seekToTime:kCMTimeZero];
+    [self.player pause];
 }
 
 - (void)setCurrentTime:(int64_t)currentTime
 {
     CMTime time = CMTimeMake(currentTime, 1);
-    [self.player seekToTime:time];
+    [self.player seekToTime:time completionHandler:^(BOOL finished) {
+        
+        if (finished && !isPauseByUser) {
+            NSLog(@"搜索完成");
+            [self.player play];
+        }
+    }];
 }
 
 #pragma mark - 全屏、旋转相关

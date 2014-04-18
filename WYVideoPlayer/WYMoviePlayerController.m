@@ -74,6 +74,8 @@
             slider.enabled = YES;
             fullScreenButton.enabled = YES;
             [playButton setTitle:@"暂停" forState:UIControlStateNormal];
+        }else{
+            NSLog(@"AVPlayerItemStatus 发生变化");
         }
     }];
     
@@ -151,13 +153,17 @@
     [super viewWillDisappear:animated];
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"我X，内存爆了");
+}
+
 #pragma mark - 控制
 - (IBAction)fullScreenAction:(id)sender {
     [_playerView fullScreen];
 }
-- (IBAction)cancelLoading:(id)sender {
-    // TODO: 
-}
+
 
 - (IBAction)play:sender
 {
@@ -226,11 +232,6 @@
 }
 
 #pragma mark - 旋转
-/*
- TODO:
- 1. 搜狐视频只是把单独一个player横了过来。(这个我已经做到)
- 2. 设备的自动旋转锁打开，在视频全屏播放时，播放器可以自动左横屏与右横屏，但不能Potrait模式。我猜这个地方没有用controller 的自动旋转做的，而是使用陀螺仪检测*/
-
 /*经验，不使用系统管理旋转，全部不勾选。*/
 // 因为在播放器界面我们要使用setStatusBarOrientation:animated方法，而这个方法有效的前提就是shouldAutorotate必须返回NO
 - (BOOL)shouldAutorotate
