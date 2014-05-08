@@ -18,6 +18,8 @@
     __weak IBOutlet UISlider *slider;
     __weak IBOutlet UILabel *currentTimeLabel;
     __weak IBOutlet UIView *topControlView;
+    __weak IBOutlet UIButton *backButton;
+    __weak IBOutlet UIButton *downloadButton;
     
     UIButton *fullScreenButton;
     
@@ -38,11 +40,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
-    
-    [UIActivityIndicatorView appearance].color = [UIColor redColor];
-    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    activityIndicator.center = self.playerView.center;
-    [self.playerView addSubview:activityIndicator];
+    self.view.backgroundColor = [UIColor blackColor];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
     [slider setMaximumTrackImage:[UIImage imageNamed:@"缓存条"] forState:UIControlStateNormal];
     [slider setMinimumTrackImage:[UIImage imageNamed:@"播放进度条"] forState:UIControlStateNormal];
@@ -57,11 +56,27 @@
     slider.enabled = NO;
     fullScreenButton.enabled = NO;
     
+    CAGradientLayer *gradientLayer = [[CAGradientLayer alloc] init];
+    gradientLayer.colors = [NSArray arrayWithObjects:
+                            (id)[[UIColor clearColor] CGColor],
+                            (id)[[[UIColor blackColor] colorWithAlphaComponent:0.8] CGColor],
+                            nil];
+    gradientLayer.startPoint = CGPointMake(0.5,1);
+    gradientLayer.endPoint = CGPointMake(0.5,0);
+    gradientLayer.frame = topControlView.bounds;
+    [topControlView.layer addSublayer: gradientLayer];
+    
     [self setupPlayer];
 }
 
 - (void)setupPlayer
 {
+    
+    [UIActivityIndicatorView appearance].color = [UIColor redColor];
+    activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    activityIndicator.center = self.playerView.center;
+    [self.playerView addSubview:activityIndicator];
+    
     UIImageView *loadingView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.playerView.width, self.playerView.height)];
     loadingView.image = [UIImage imageNamed:@"loadingImage"];
     self.playerView.loadingView = loadingView;
@@ -131,7 +146,7 @@
     playerOriginalCenter = _playerView.center;
     
     
-    UITapGestureRecognizer *hideSubviewGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSubviewGestureAction)];
+    UITapGestureRecognizer *hideSubviewGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSubviewGestureAction:)];
     hideSubviewGesture.numberOfTapsRequired = 1;
     
     [_playerView addGestureRecognizer:hideSubviewGesture];
@@ -149,9 +164,13 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
-    [_playerView pause];
+    
     [super viewWillDisappear:animated];
+    [_playerView pause];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -187,18 +206,30 @@
 }
 
 
-- (void)hideSubviewGestureAction
+- (void)hideSubviewGestureAction:(UITapGestureRecognizer *)tap
 {
+    CGPoint point = [tap locationInView:_playerView];
+    if (CGRectContainsPoint(backButton.frame, point)) {
+        [self popAction:nil];
+        return;
+    }
+    
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
         if ([UIApplication sharedApplication].statusBarHidden) {
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
             [UIView animateWithDuration:0.15 animations:^{
                 slider.alpha = 1;
+                topControlView.alpha = 1;
+                downloadButton.alpha = 1;
+                backButton.alpha = 1;
             }];
         }else{
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
             [UIView animateWithDuration:0.15 animations:^{
                 slider.alpha = 0;
+                topControlView.alpha = 0;
+                downloadButton.alpha = 0;
+                backButton.alpha = 0;
             }];
         }
         
@@ -209,10 +240,16 @@
             if (view.alpha) {
                 [UIView animateWithDuration:0.15 animations:^{
                     slider.alpha = 0;
+                    topControlView.alpha = 0;
+                    downloadButton.alpha = 0;
+                    backButton.alpha = 1;
                 }];
             }else{
                 [UIView animateWithDuration:0.15 animations:^{
                     slider.alpha = 1;
+                    topControlView.alpha = 1;
+                    downloadButton.alpha = 1;
+                    backButton.alpha = 1;
                 }];
             }
         }
@@ -221,14 +258,17 @@
 
 // 滑动块在滑动时要先暂停，然后改变时间，结束时要播放。如果不先暂停，slider会有乱串的现象
 - (IBAction)sliderChangeBegin:(id)sender {
-    [_playerView pause];
+//    [_playerView pause];
 }
 
 - (IBAction)sliderChange:(UISlider *)sender {
     _playerView.currentTime = sender.value;
 }
 - (IBAction)sliderChangeFinish:(id)sender {
-    [_playerView play];
+//    if (!_playerView.isPauseByUser) {
+//        [_playerView play];
+//    }
+    
 }
 
 #pragma mark - 旋转

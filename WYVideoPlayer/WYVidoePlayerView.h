@@ -32,6 +32,7 @@
  */
 @property (assign, nonatomic) float rate;
 
+@property (readonly, nonatomic) BOOL isPauseByUser;
 /**
  *  当前正要播放的视频最后一次播放的时间点，再次播放该视频时，播放器会从该时间点开始。
  *  如果上一次视频已播放结束，那么lastPlayedTime为0
