@@ -21,6 +21,7 @@ ios6.0及以上
 1. play view 只提供播放的基本控制及信息。只提供控制接口，不提供控制相关的UI. 全屏，播放，暂停，进度，总时长。
 2. play view 不提供手势操作，想要实现在你自己的view controller里自己加。一般来说有单击隐藏控制栏，双击全屏。
 3. 提供了各种回调机制（block）
+4. 使用AVQueuePlayer，在视频退出时执行`queuePlayer removeAllItems`以停止视频加载
  
 ## WYMoviePlayerController
 1. 示例了旋转操作的处理，及有UINavigationController时要如何处理才能旋转

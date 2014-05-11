@@ -159,7 +159,7 @@
     //    NSURL *url = [NSURL fileURLWithPath:path];
     // http://v.yingshibao.chuanke.com/CET4_video/4001_zongshu_I.mp4
     // http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8
-    NSURL *url = [NSURL URLWithString:@"http://v.yingshibao.chuanke.com/CET4_video/4001_zongshu_I.mp4"];
+    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_playerView loadURL:url];
 }
 
@@ -278,6 +278,12 @@
 {
     return NO;
 }
+
+#pragma mark - 其它操作
+- (IBAction)downloadAction:(id)sender {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"其它操作" message:nil delegate:nil cancelButtonTitle:@"好的" otherButtonTitles:nil];
+    [alert show];
+}
 @end
 
 
@@ -298,4 +304,5 @@
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     return [[self.viewControllers lastObject] preferredInterfaceOrientationForPresentation];
 }
+
 @end
