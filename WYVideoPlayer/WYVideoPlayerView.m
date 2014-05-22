@@ -6,12 +6,12 @@
 //  Copyright (c) 2014年 com.wy. All rights reserved.
 //
 
-#import "WYVidoePlayerView.h"
+#import "WYVideoPlayerView.h"
 #import "AFNetworkReachabilityManager.h"
 #import <CommonCrypto/CommonDigest.h>
 
 
-@interface WYVidoePlayerView () <UIAlertViewDelegate>
+@interface WYVideoPlayerView () <UIAlertViewDelegate>
 {
     NSURL *videoURL;
     
@@ -22,11 +22,11 @@
     CGRect playerOriginalBounds;
     
     
-    void (^playerItemStatusChangeBlock)(AVPlayerItemStatus status, WYVidoePlayerView *playerView);
-    void(^currentTimeUpdateBlock)(int64_t currentTime, WYVidoePlayerView *playerView);
-    void(^orientationWillChangeBlock)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVidoePlayerView *playerView);
-    void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVidoePlayerView *playerView);
-    void (^needShowActivityIndicatorViewBlock)(BOOL shouldShow, WYVidoePlayerView *playerView);
+    void (^playerItemStatusChangeBlock)(AVPlayerItemStatus status, WYVideoPlayerView *playerView);
+    void(^currentTimeUpdateBlock)(int64_t currentTime, WYVideoPlayerView *playerView);
+    void(^orientationWillChangeBlock)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVideoPlayerView *playerView);
+    void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVideoPlayerView *playerView);
+    void (^needShowActivityIndicatorViewBlock)(BOOL shouldShow, WYVideoPlayerView *playerView);
     
     id periodicTimeObserver;
     
@@ -48,7 +48,7 @@ static const NSString *PlayerViewFrameContext;
 static const NSString *ReadyForDisplayContext;
 static const NSString *ItemPlaybackLikelyToKeepUpContext;
 static const NSString *ItemPlaybackBufferEmptyContext;
-@implementation WYVidoePlayerView
+@implementation WYVideoPlayerView
 
 #pragma mark - 初始化
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -84,6 +84,8 @@ static const NSString *ItemPlaybackBufferEmptyContext;
 
 - (void)doInit
 {
+    self.backgroundColor = [UIColor blackColor];
+    
     [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:&PlayerViewFrameContext];
     playerOriginalBounds = self.bounds;
     playerOriginalCenter = self.center;
@@ -129,7 +131,7 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     [networkReachabilityManager startMonitoring];
     
     // 变为3G网络时，给个暂停，但是其实还是在继续加载的，这个控制不了。提示用户选择继续播放，或者停止，停止了，那就真停止了，显示loadingView
-    __weak WYVidoePlayerView *weakSelf = self;
+    __weak WYVideoPlayerView *weakSelf = self;
     [networkReachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusReachableViaWWAN) {
             // TODO: 变为手机蜂窝网络，停止加载
@@ -467,27 +469,27 @@ static const NSString *ItemPlaybackBufferEmptyContext;
 
 #pragma mark - Block
 
-- (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVidoePlayerView *playerView))block
+- (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVideoPlayerView *playerView))block
 {
     playerItemStatusChangeBlock = block;
 }
 
-- (void)setCurrentTimeUpdateBlock:(void(^)(int64_t currentTime, WYVidoePlayerView *playerView))block
+- (void)setCurrentTimeUpdateBlock:(void(^)(int64_t currentTime, WYVideoPlayerView *playerView))block
 {
     currentTimeUpdateBlock = block;
 }
 
-- (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVidoePlayerView *playerView))block
+- (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVideoPlayerView *playerView))block
 {
     orientationWillChangeBlock = block;
 }
 
-- (void)setLoadedTimeUpdateBlock:(void(^)(int64_t loadTime, WYVidoePlayerView *playerView))block
+- (void)setLoadedTimeUpdateBlock:(void(^)(int64_t loadTime, WYVideoPlayerView *playerView))block
 {
     loadedTimeUpdateBlock = block;
 }
 
-- (void)setNeedShowActivityIndicatorViewBlock:(void (^)(BOOL shouldShow, WYVidoePlayerView *playerView))block
+- (void)setNeedShowActivityIndicatorViewBlock:(void (^)(BOOL shouldShow, WYVideoPlayerView *playerView))block
 {
     needShowActivityIndicatorViewBlock = block;
 }

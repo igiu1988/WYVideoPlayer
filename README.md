@@ -1,33 +1,42 @@
 #WYVideoPlayer
+简单的说就是在模仿搜狐视频播放器。搜狐视频的播放器在全屏动画上，过渡最流畅
 
-基于AV Foundation的视频播放器。<font color=red size=20>还没有做完。</font>
+
+## 主要功能描述
+1. 加载远程或本地视频
+2. 旋转、全屏控制
+3. 提供了视频播放的基本操作
+4. 网络环境改变的监控及处理
+5. app状态改变的控制
+6. 双击全屏；单击隐藏播放控制
+7. 记录位置播放。触发点：后台时，popController时，暂停时。其实这些都会触发暂停操作，所以简单的说就是在每次暂停时都会记录。记录的时间为currentTime减去某个值，再播放时由于是从先前的几秒位置开始，这样应该有助于记忆衔接。相关代码在`saveLastPlayTime`方法里
+
 ## 系统兼容
 ios6.0及以上
 
-## 旋转
-* 使用CGAffineTransform来控制相关的旋转
-* 使用UIDeviceOrientationDidChangeNotification来检测设备是否进行旋转 
+## 使用
+代码详见`WYMoviePlayerController`中的`setupPlayer`方法
 
-
-## 全屏
-* 在ios6.0里使用wantsFullScreenLayout＝YES来达到全屏播放的处理。
-* 使用view.center及view.bounds来改变view的位置及大小，再rotateTransform，这样动画就会按照我们的旨意去运行
-
-
-# 类
-
-主要的两个类的描述
-## WYVideoPlayerView
+## 主要类描述
+### WYVideoPlayerView
 1. play view 只提供播放的基本控制及信息。只提供控制接口，不提供控制相关的UI. 全屏，播放，暂停，进度，总时长。
 2. play view 不提供手势操作，想要实现在你自己的view controller里自己加。一般来说有单击隐藏控制栏，双击全屏。
-3. 提供了各种回调机制（block）
-4. 使用AVQueuePlayer，在视频退出时执行`queuePlayer removeAllItems`以停止视频加载
+3. 提供了各种回调函数（block）
+4. 使用AVQueuePlayer播放视频，在视频退出时执行`queuePlayer removeAllItems`以停止视频加载
  
-## WYMoviePlayerController
-1. 示例了旋转操作的处理，及有UINavigationController时要如何处理才能旋转
-2. 示例了手势处理
+### WYMoviePlayerController
+1. 示例了WYVideoPlayerView在旋转时，controller要如何配合。详见项目里的文档`How to Rotate Like SoHu Video.md`
+2. 示例了两个手势处理
+
+## 旋转及全屏
+详见项目中的文档：How to Rotate Like SoHu Video.md
 
 
-# 参考
+## 问题（bug）列表
+下面所说的问题，要么是的确存在这个bug，要么就是还不确定，需要测试验证
 
-[AV Foundation Programming Guide](https://developer.apple.com/library/mac/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/03_Editing.html) 和各种google搜索
+0. 断网再连接，应该可以自动继续缓冲及自动播放; ItemPlaybackLikelyToKeepUpContext这个observer的执行事件有问题
+1. 记录当前播放时间，网络情况（断开、wifi、3G）切换时，可以从指定位置继续播放。
+2. 网络情况改变的监控。比如在wifi突然变成3G的情况下，需要及时提示：还要继续缓冲吗？
+3. 暂停状态下搜索，搜索结束后，应该还是暂停状态
+4. 断网再连接，需要测试及可能的优化

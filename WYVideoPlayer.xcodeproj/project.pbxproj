@@ -39,7 +39,7 @@
 		D3A6907D18EBF1BF000029B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3A6907B18EBF1BF000029B8 /* InfoPlist.strings */; };
 		D3A6907F18EBF1BF000029B8 /* WYVideoPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6907E18EBF1BF000029B8 /* WYVideoPlayerTests.m */; };
 		D3A6908C18EBF1E0000029B8 /* WYMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */; };
-		D3A6908D18EBF1E0000029B8 /* WYVidoePlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */; };
+		D3A6908D18EBF1E0000029B8 /* WYVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908B18EBF1E0000029B8 /* WYVideoPlayerView.m */; };
 		D3A6909018EBF21A000029B8 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908F18EBF21A000029B8 /* UIView+Utils.m */; };
 		D3D5E91918F4D7FF0096D3B6 /* TODO.md in Resources */ = {isa = PBXBuildFile; fileRef = D3D5E91818F4D7FF0096D3B6 /* TODO.md */; };
 		D3FC038618FCC67B00B8748F /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */; };
@@ -95,8 +95,8 @@
 		D3A6907E18EBF1BF000029B8 /* WYVideoPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYVideoPlayerTests.m; sourceTree = "<group>"; };
 		D3A6908818EBF1E0000029B8 /* WYMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYMoviePlayerController.h; sourceTree = "<group>"; };
 		D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYMoviePlayerController.m; sourceTree = "<group>"; };
-		D3A6908A18EBF1E0000029B8 /* WYVidoePlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYVidoePlayerView.h; sourceTree = "<group>"; };
-		D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYVidoePlayerView.m; sourceTree = "<group>"; };
+		D3A6908A18EBF1E0000029B8 /* WYVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYVideoPlayerView.h; sourceTree = "<group>"; };
+		D3A6908B18EBF1E0000029B8 /* WYVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYVideoPlayerView.m; sourceTree = "<group>"; };
 		D3A6908E18EBF21A000029B8 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		D3A6908F18EBF21A000029B8 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
 		D3D5E91818F4D7FF0096D3B6 /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
@@ -202,8 +202,8 @@
 				D3A6906918EBF1BF000029B8 /* WYViewController.m */,
 				D3A6908818EBF1E0000029B8 /* WYMoviePlayerController.h */,
 				D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */,
-				D3A6908A18EBF1E0000029B8 /* WYVidoePlayerView.h */,
-				D3A6908B18EBF1E0000029B8 /* WYVidoePlayerView.m */,
+				D3A6908A18EBF1E0000029B8 /* WYVideoPlayerView.h */,
+				D3A6908B18EBF1E0000029B8 /* WYVideoPlayerView.m */,
 				D3A6906B18EBF1BF000029B8 /* Images.xcassets */,
 				D3A6905A18EBF1BF000029B8 /* Supporting Files */,
 			);
@@ -357,7 +357,7 @@
 				D3A6908C18EBF1E0000029B8 /* WYMoviePlayerController.m in Sources */,
 				D3A6906018EBF1BF000029B8 /* main.m in Sources */,
 				D386685A18F7AE0100517FF8 /* WYTableViewController.m in Sources */,
-				D3A6908D18EBF1E0000029B8 /* WYVidoePlayerView.m in Sources */,
+				D3A6908D18EBF1E0000029B8 /* WYVideoPlayerView.m in Sources */,
 				D3FC038618FCC67B00B8748F /* AFNetworkReachabilityManager.m in Sources */,
 				D3A6906A18EBF1BF000029B8 /* WYViewController.m in Sources */,
 			);

@@ -7,7 +7,7 @@
 //
 
 #import "WYMoviePlayerController.h"
-#import "WYVidoePlayerView.h"
+#import "WYVideoPlayerView.h"
 
 
 
@@ -71,18 +71,22 @@
 
 - (void)setupPlayer
 {
-    
+    // 1.设置视频缓冲时显示的activityIndicator
     [UIActivityIndicatorView appearance].color = [UIColor redColor];
     activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.center = self.playerView.center;
     [self.playerView addSubview:activityIndicator];
     
+    // 2.设置视频第一次加载时显示的默认图片
     UIImageView *loadingView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.playerView.width, self.playerView.height)];
     loadingView.image = [UIImage imageNamed:@"loadingImage"];
     self.playerView.loadingView = loadingView;
+    
+    // 3.设置播放器的背景
     self.playerView.backgroundColor = [UIColor blackColor];
     
-    [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVidoePlayerView *playerView) {
+    // 4.视频第一次缓冲并可以播放时的回调
+    [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVideoPlayerView *playerView) {
         if (status == AVPlayerItemStatusReadyToPlay) {
             slider.maximumValue = playerView.duration;
             playButton.enabled = YES;
@@ -94,13 +98,14 @@
         }
     }];
     
-    [self.playerView setCurrentTimeUpdateBlock:^(int64_t currentTime, WYVidoePlayerView *playerView) {
+    // 5.视频播放进度
+    [self.playerView setCurrentTimeUpdateBlock:^(int64_t currentTime, WYVideoPlayerView *playerView) {
         slider.value = currentTime;
         currentTimeLabel.text = [NSString stringWithFormat:@"已播放%lld/%lld", currentTime, playerView.duration];
     }];
     
-    
-    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angel, WYVidoePlayerView *playerView) {
+    // 6.播放器旋转时的回调
+    [self.playerView setOrientationWillChangeBlock:^(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angel, WYVideoPlayerView *playerView) {
         
         if (UIInterfaceOrientationIsLandscape(orientationWillChangeTo)) {
             
@@ -130,11 +135,13 @@
         }
     }];
     
-    [self.playerView setLoadedTimeUpdateBlock:^(int64_t loadTime, WYVidoePlayerView *playerView) {
+    // 7.视频已加载时间的变化回调
+    [self.playerView setLoadedTimeUpdateBlock:^(int64_t loadTime, WYVideoPlayerView *playerView) {
         loadingProgressLabel.text = [NSString stringWithFormat:@"已加载%lld / %lld", loadTime, playerView.duration];
     }];
     
-    [self.playerView setNeedShowActivityIndicatorViewBlock:^(BOOL shouldShow, WYVidoePlayerView *playerView) {
+    // 8.播放器是否需要显示activityIndicator
+    [self.playerView setNeedShowActivityIndicatorViewBlock:^(BOOL shouldShow, WYVideoPlayerView *playerView) {
         if (shouldShow){
             [activityIndicator startAnimating];
         }else{
@@ -287,7 +294,7 @@
 @end
 
 
-// 反正状态栏能不能旋转，要看这个viewcontroller在不在UINavigationController。如果在，那么就要像下面这样，如何不在，直接旋转状态栏就可以
+// 反正状态栏能不能旋转，要看这个viewcontroller在不在UINavigationController。如果在，那么就要像下面这样，如果不在，直接旋转状态栏就可以
 @implementation UINavigationController (Rotation)
 - (BOOL)shouldAutorotate
 {

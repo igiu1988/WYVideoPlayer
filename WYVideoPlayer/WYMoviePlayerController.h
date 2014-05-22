@@ -12,11 +12,11 @@
 /*
  播放控制不要加到WYVidoePlayerView里，需要在这里自定义。
  */
-@class WYVidoePlayerView;
+@class WYVideoPlayerView;
 @interface WYMoviePlayerController : UIViewController
 @property (nonatomic) AVPlayer *player;
 
-@property (nonatomic, weak) IBOutlet WYVidoePlayerView *playerView;
+@property (nonatomic, weak) IBOutlet WYVideoPlayerView *playerView;
 
 
 @end
