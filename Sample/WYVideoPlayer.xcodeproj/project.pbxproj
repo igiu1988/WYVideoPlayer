@@ -9,21 +9,7 @@
 /* Begin PBXBuildFile section */
 		D309673318FB8727008D6417 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D309673218FB8727008D6417 /* CFNetwork.framework */; };
 		D309673518FB872C008D6417 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D309673418FB872C008D6417 /* QuartzCore.framework */; };
-		D321AAE018FAAAB60038533F /* loadingImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D321AADE18FAAAB60038533F /* loadingImage.png */; };
-		D321AAE118FAAAB60038533F /* loadingImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D321AADF18FAAAB60038533F /* loadingImage@2x.png */; };
 		D386685A18F7AE0100517FF8 /* WYTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D386685918F7AE0100517FF8 /* WYTableViewController.m */; };
-		D3979CE318F68804004B2A12 /* 下载按钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCD18F68804004B2A12 /* 下载按钮.png */; };
-		D3979CE418F68804004B2A12 /* 下载按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CCE18F68804004B2A12 /* 下载按钮@2x.png */; };
-		D3979CE718F68804004B2A12 /* 总时间条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD118F68804004B2A12 /* 总时间条.png */; };
-		D3979CE818F68804004B2A12 /* 总时间条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD218F68804004B2A12 /* 总时间条@2x.png */; };
-		D3979CE918F68804004B2A12 /* 播放拖动钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD318F68804004B2A12 /* 播放拖动钮.png */; };
-		D3979CEA18F68804004B2A12 /* 播放拖动钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD418F68804004B2A12 /* 播放拖动钮@2x.png */; };
-		D3979CEB18F68804004B2A12 /* 播放进度条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD518F68804004B2A12 /* 播放进度条.png */; };
-		D3979CEC18F68804004B2A12 /* 播放进度条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD618F68804004B2A12 /* 播放进度条@2x.png */; };
-		D3979CEF18F68804004B2A12 /* 缓存条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CD918F68804004B2A12 /* 缓存条.png */; };
-		D3979CF018F68804004B2A12 /* 缓存条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CDA18F68804004B2A12 /* 缓存条@2x.png */; };
-		D3979CF918F6C7C3004B2A12 /* 返回箭头.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CF718F6C7C3004B2A12 /* 返回箭头.png */; };
-		D3979CFA18F6C7C3004B2A12 /* 返回箭头@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3979CF818F6C7C3004B2A12 /* 返回箭头@2x.png */; };
 		D3A6905418EBF1BF000029B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905318EBF1BF000029B8 /* Foundation.framework */; };
 		D3A6905618EBF1BF000029B8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905518EBF1BF000029B8 /* CoreGraphics.framework */; };
 		D3A6905818EBF1BF000029B8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3A6905718EBF1BF000029B8 /* UIKit.framework */; };
@@ -39,9 +25,10 @@
 		D3A6907D18EBF1BF000029B8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D3A6907B18EBF1BF000029B8 /* InfoPlist.strings */; };
 		D3A6907F18EBF1BF000029B8 /* WYVideoPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6907E18EBF1BF000029B8 /* WYVideoPlayerTests.m */; };
 		D3A6908C18EBF1E0000029B8 /* WYMoviePlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */; };
-		D3A6908D18EBF1E0000029B8 /* WYVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908B18EBF1E0000029B8 /* WYVideoPlayerView.m */; };
 		D3A6909018EBF21A000029B8 /* UIView+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = D3A6908F18EBF21A000029B8 /* UIView+Utils.m */; };
-		D3D5E91918F4D7FF0096D3B6 /* TODO.md in Resources */ = {isa = PBXBuildFile; fileRef = D3D5E91818F4D7FF0096D3B6 /* TODO.md */; };
+		D3D2D829192E2C01005C1679 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D3D2D827192E2C01005C1679 /* README.md */; };
+		D3D2D82A192E2C01005C1679 /* TODO.md in Resources */ = {isa = PBXBuildFile; fileRef = D3D2D828192E2C01005C1679 /* TODO.md */; };
+		D3D2D832192E2C6D005C1679 /* WYVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D3D2D831192E2C6D005C1679 /* WYVideoPlayerView.m */; };
 		D3FC038618FCC67B00B8748F /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */; };
 /* End PBXBuildFile section */
 
@@ -58,22 +45,8 @@
 /* Begin PBXFileReference section */
 		D309673218FB8727008D6417 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D309673418FB872C008D6417 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		D321AADE18FAAAB60038533F /* loadingImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loadingImage.png; sourceTree = "<group>"; };
-		D321AADF18FAAAB60038533F /* loadingImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loadingImage@2x.png"; sourceTree = "<group>"; };
 		D386685818F7AE0100517FF8 /* WYTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYTableViewController.h; sourceTree = "<group>"; };
 		D386685918F7AE0100517FF8 /* WYTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYTableViewController.m; sourceTree = "<group>"; };
-		D3979CCD18F68804004B2A12 /* 下载按钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下载按钮.png"; sourceTree = "<group>"; };
-		D3979CCE18F68804004B2A12 /* 下载按钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下载按钮@2x.png"; sourceTree = "<group>"; };
-		D3979CD118F68804004B2A12 /* 总时间条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "总时间条.png"; sourceTree = "<group>"; };
-		D3979CD218F68804004B2A12 /* 总时间条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "总时间条@2x.png"; sourceTree = "<group>"; };
-		D3979CD318F68804004B2A12 /* 播放拖动钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放拖动钮.png"; sourceTree = "<group>"; };
-		D3979CD418F68804004B2A12 /* 播放拖动钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放拖动钮@2x.png"; sourceTree = "<group>"; };
-		D3979CD518F68804004B2A12 /* 播放进度条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放进度条.png"; sourceTree = "<group>"; };
-		D3979CD618F68804004B2A12 /* 播放进度条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放进度条@2x.png"; sourceTree = "<group>"; };
-		D3979CD918F68804004B2A12 /* 缓存条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "缓存条.png"; sourceTree = "<group>"; };
-		D3979CDA18F68804004B2A12 /* 缓存条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "缓存条@2x.png"; sourceTree = "<group>"; };
-		D3979CF718F6C7C3004B2A12 /* 返回箭头.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回箭头.png"; sourceTree = "<group>"; };
-		D3979CF818F6C7C3004B2A12 /* 返回箭头@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回箭头@2x.png"; sourceTree = "<group>"; };
 		D3A6905018EBF1BF000029B8 /* WYPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WYPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3A6905318EBF1BF000029B8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D3A6905518EBF1BF000029B8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -95,11 +68,12 @@
 		D3A6907E18EBF1BF000029B8 /* WYVideoPlayerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYVideoPlayerTests.m; sourceTree = "<group>"; };
 		D3A6908818EBF1E0000029B8 /* WYMoviePlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYMoviePlayerController.h; sourceTree = "<group>"; };
 		D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYMoviePlayerController.m; sourceTree = "<group>"; };
-		D3A6908A18EBF1E0000029B8 /* WYVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYVideoPlayerView.h; sourceTree = "<group>"; };
-		D3A6908B18EBF1E0000029B8 /* WYVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYVideoPlayerView.m; sourceTree = "<group>"; };
 		D3A6908E18EBF21A000029B8 /* UIView+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Utils.h"; sourceTree = "<group>"; };
 		D3A6908F18EBF21A000029B8 /* UIView+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Utils.m"; sourceTree = "<group>"; };
-		D3D5E91818F4D7FF0096D3B6 /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
+		D3D2D827192E2C01005C1679 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		D3D2D828192E2C01005C1679 /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
+		D3D2D830192E2C6D005C1679 /* WYVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYVideoPlayerView.h; sourceTree = "<group>"; };
+		D3D2D831192E2C6D005C1679 /* WYVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYVideoPlayerView.m; sourceTree = "<group>"; };
 		D3FC038418FCC67B00B8748F /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,33 +104,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D3979CCA18F68804004B2A12 /* 图片 */ = {
-			isa = PBXGroup;
-			children = (
-				D321AADE18FAAAB60038533F /* loadingImage.png */,
-				D321AADF18FAAAB60038533F /* loadingImage@2x.png */,
-				D3979CF718F6C7C3004B2A12 /* 返回箭头.png */,
-				D3979CF818F6C7C3004B2A12 /* 返回箭头@2x.png */,
-				D3979CCD18F68804004B2A12 /* 下载按钮.png */,
-				D3979CCE18F68804004B2A12 /* 下载按钮@2x.png */,
-				D3979CD118F68804004B2A12 /* 总时间条.png */,
-				D3979CD218F68804004B2A12 /* 总时间条@2x.png */,
-				D3979CD318F68804004B2A12 /* 播放拖动钮.png */,
-				D3979CD418F68804004B2A12 /* 播放拖动钮@2x.png */,
-				D3979CD518F68804004B2A12 /* 播放进度条.png */,
-				D3979CD618F68804004B2A12 /* 播放进度条@2x.png */,
-				D3979CD918F68804004B2A12 /* 缓存条.png */,
-				D3979CDA18F68804004B2A12 /* 缓存条@2x.png */,
-			);
-			name = "图片";
-			path = "视频播放";
-			sourceTree = "<group>";
-		};
 		D3A6904718EBF1BF000029B8 = {
 			isa = PBXGroup;
 			children = (
-				D3D5E91818F4D7FF0096D3B6 /* TODO.md */,
-				D3979CCA18F68804004B2A12 /* 图片 */,
+				D3D2D827192E2C01005C1679 /* README.md */,
+				D3D2D828192E2C01005C1679 /* TODO.md */,
 				D3A6905918EBF1BF000029B8 /* WYVideoPlayer */,
 				D3A6907818EBF1BF000029B8 /* WYVideoPlayerTests */,
 				D3A6905218EBF1BF000029B8 /* Frameworks */,
@@ -189,6 +141,7 @@
 		D3A6905918EBF1BF000029B8 /* WYVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D3D2D82F192E2C6D005C1679 /* WYVideoPlayer */,
 				D3FC038418FCC67B00B8748F /* AFNetworkReachabilityManager.h */,
 				D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */,
 				D3A6908E18EBF21A000029B8 /* UIView+Utils.h */,
@@ -202,8 +155,6 @@
 				D3A6906918EBF1BF000029B8 /* WYViewController.m */,
 				D3A6908818EBF1E0000029B8 /* WYMoviePlayerController.h */,
 				D3A6908918EBF1E0000029B8 /* WYMoviePlayerController.m */,
-				D3A6908A18EBF1E0000029B8 /* WYVideoPlayerView.h */,
-				D3A6908B18EBF1E0000029B8 /* WYVideoPlayerView.m */,
 				D3A6906B18EBF1BF000029B8 /* Images.xcassets */,
 				D3A6905A18EBF1BF000029B8 /* Supporting Files */,
 			);
@@ -237,6 +188,16 @@
 				D3A6907B18EBF1BF000029B8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D3D2D82F192E2C6D005C1679 /* WYVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				D3D2D830192E2C6D005C1679 /* WYVideoPlayerView.h */,
+				D3D2D831192E2C6D005C1679 /* WYVideoPlayerView.m */,
+			);
+			name = WYVideoPlayer;
+			path = ../../WYVideoPlayer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,24 +277,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3D5E91918F4D7FF0096D3B6 /* TODO.md in Resources */,
-				D3979CE918F68804004B2A12 /* 播放拖动钮.png in Resources */,
 				D3A6906C18EBF1BF000029B8 /* Images.xcassets in Resources */,
-				D3979CF918F6C7C3004B2A12 /* 返回箭头.png in Resources */,
 				D3A6905E18EBF1BF000029B8 /* InfoPlist.strings in Resources */,
-				D3979CEC18F68804004B2A12 /* 播放进度条@2x.png in Resources */,
-				D321AAE118FAAAB60038533F /* loadingImage@2x.png in Resources */,
-				D3979CEB18F68804004B2A12 /* 播放进度条.png in Resources */,
-				D3979CEF18F68804004B2A12 /* 缓存条.png in Resources */,
-				D3979CEA18F68804004B2A12 /* 播放拖动钮@2x.png in Resources */,
-				D321AAE018FAAAB60038533F /* loadingImage.png in Resources */,
+				D3D2D829192E2C01005C1679 /* README.md in Resources */,
 				D3A6906718EBF1BF000029B8 /* Main.storyboard in Resources */,
-				D3979CE718F68804004B2A12 /* 总时间条.png in Resources */,
-				D3979CE318F68804004B2A12 /* 下载按钮.png in Resources */,
-				D3979CE818F68804004B2A12 /* 总时间条@2x.png in Resources */,
-				D3979CFA18F6C7C3004B2A12 /* 返回箭头@2x.png in Resources */,
-				D3979CE418F68804004B2A12 /* 下载按钮@2x.png in Resources */,
-				D3979CF018F68804004B2A12 /* 缓存条@2x.png in Resources */,
+				D3D2D82A192E2C01005C1679 /* TODO.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,7 +305,7 @@
 				D3A6908C18EBF1E0000029B8 /* WYMoviePlayerController.m in Sources */,
 				D3A6906018EBF1BF000029B8 /* main.m in Sources */,
 				D386685A18F7AE0100517FF8 /* WYTableViewController.m in Sources */,
-				D3A6908D18EBF1E0000029B8 /* WYVideoPlayerView.m in Sources */,
+				D3D2D832192E2C6D005C1679 /* WYVideoPlayerView.m in Sources */,
 				D3FC038618FCC67B00B8748F /* AFNetworkReachabilityManager.m in Sources */,
 				D3A6906A18EBF1BF000029B8 /* WYViewController.m in Sources */,
 			);
