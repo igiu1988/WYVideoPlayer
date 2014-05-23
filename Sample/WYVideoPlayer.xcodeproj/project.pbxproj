@@ -29,6 +29,20 @@
 		D3D2D829192E2C01005C1679 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D3D2D827192E2C01005C1679 /* README.md */; };
 		D3D2D82A192E2C01005C1679 /* TODO.md in Resources */ = {isa = PBXBuildFile; fileRef = D3D2D828192E2C01005C1679 /* TODO.md */; };
 		D3D2D832192E2C6D005C1679 /* WYVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D3D2D831192E2C6D005C1679 /* WYVideoPlayerView.m */; };
+		D3FAD566192F297400612C9B /* loadingImage.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD558192F297400612C9B /* loadingImage.png */; };
+		D3FAD567192F297400612C9B /* loadingImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD559192F297400612C9B /* loadingImage@2x.png */; };
+		D3FAD568192F297400612C9B /* 下载按钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD55A192F297400612C9B /* 下载按钮.png */; };
+		D3FAD569192F297400612C9B /* 下载按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD55B192F297400612C9B /* 下载按钮@2x.png */; };
+		D3FAD56A192F297400612C9B /* 总时间条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD55C192F297400612C9B /* 总时间条.png */; };
+		D3FAD56B192F297400612C9B /* 总时间条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD55D192F297400612C9B /* 总时间条@2x.png */; };
+		D3FAD56C192F297400612C9B /* 播放拖动钮.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD55E192F297400612C9B /* 播放拖动钮.png */; };
+		D3FAD56D192F297400612C9B /* 播放拖动钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD55F192F297400612C9B /* 播放拖动钮@2x.png */; };
+		D3FAD56E192F297400612C9B /* 播放进度条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD560192F297400612C9B /* 播放进度条.png */; };
+		D3FAD56F192F297400612C9B /* 播放进度条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD561192F297400612C9B /* 播放进度条@2x.png */; };
+		D3FAD570192F297400612C9B /* 缓存条.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD562192F297400612C9B /* 缓存条.png */; };
+		D3FAD571192F297400612C9B /* 缓存条@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD563192F297400612C9B /* 缓存条@2x.png */; };
+		D3FAD572192F297400612C9B /* 返回箭头.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD564192F297400612C9B /* 返回箭头.png */; };
+		D3FAD573192F297400612C9B /* 返回箭头@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3FAD565192F297400612C9B /* 返回箭头@2x.png */; };
 		D3FC038618FCC67B00B8748F /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +88,20 @@
 		D3D2D828192E2C01005C1679 /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.md; sourceTree = "<group>"; };
 		D3D2D830192E2C6D005C1679 /* WYVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WYVideoPlayerView.h; sourceTree = "<group>"; };
 		D3D2D831192E2C6D005C1679 /* WYVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WYVideoPlayerView.m; sourceTree = "<group>"; };
+		D3FAD558192F297400612C9B /* loadingImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loadingImage.png; sourceTree = "<group>"; };
+		D3FAD559192F297400612C9B /* loadingImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loadingImage@2x.png"; sourceTree = "<group>"; };
+		D3FAD55A192F297400612C9B /* 下载按钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下载按钮.png"; sourceTree = "<group>"; };
+		D3FAD55B192F297400612C9B /* 下载按钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "下载按钮@2x.png"; sourceTree = "<group>"; };
+		D3FAD55C192F297400612C9B /* 总时间条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "总时间条.png"; sourceTree = "<group>"; };
+		D3FAD55D192F297400612C9B /* 总时间条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "总时间条@2x.png"; sourceTree = "<group>"; };
+		D3FAD55E192F297400612C9B /* 播放拖动钮.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放拖动钮.png"; sourceTree = "<group>"; };
+		D3FAD55F192F297400612C9B /* 播放拖动钮@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放拖动钮@2x.png"; sourceTree = "<group>"; };
+		D3FAD560192F297400612C9B /* 播放进度条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放进度条.png"; sourceTree = "<group>"; };
+		D3FAD561192F297400612C9B /* 播放进度条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "播放进度条@2x.png"; sourceTree = "<group>"; };
+		D3FAD562192F297400612C9B /* 缓存条.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "缓存条.png"; sourceTree = "<group>"; };
+		D3FAD563192F297400612C9B /* 缓存条@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "缓存条@2x.png"; sourceTree = "<group>"; };
+		D3FAD564192F297400612C9B /* 返回箭头.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回箭头.png"; sourceTree = "<group>"; };
+		D3FAD565192F297400612C9B /* 返回箭头@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "返回箭头@2x.png"; sourceTree = "<group>"; };
 		D3FC038418FCC67B00B8748F /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		D3FC038518FCC67B00B8748F /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -164,6 +192,7 @@
 		D3A6905A18EBF1BF000029B8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D3FAD557192F297400612C9B /* images */,
 				D3A6905B18EBF1BF000029B8 /* WYVideoPlayer-Info.plist */,
 				D3A6905C18EBF1BF000029B8 /* InfoPlist.strings */,
 				D3A6905F18EBF1BF000029B8 /* main.m */,
@@ -199,6 +228,27 @@
 			name = WYVideoPlayer;
 			path = ../../WYVideoPlayer;
 			sourceTree = "<group>";
+		};
+		D3FAD557192F297400612C9B /* images */ = {
+			isa = PBXGroup;
+			children = (
+				D3FAD558192F297400612C9B /* loadingImage.png */,
+				D3FAD559192F297400612C9B /* loadingImage@2x.png */,
+				D3FAD55A192F297400612C9B /* 下载按钮.png */,
+				D3FAD55B192F297400612C9B /* 下载按钮@2x.png */,
+				D3FAD55C192F297400612C9B /* 总时间条.png */,
+				D3FAD55D192F297400612C9B /* 总时间条@2x.png */,
+				D3FAD55E192F297400612C9B /* 播放拖动钮.png */,
+				D3FAD55F192F297400612C9B /* 播放拖动钮@2x.png */,
+				D3FAD560192F297400612C9B /* 播放进度条.png */,
+				D3FAD561192F297400612C9B /* 播放进度条@2x.png */,
+				D3FAD562192F297400612C9B /* 缓存条.png */,
+				D3FAD563192F297400612C9B /* 缓存条@2x.png */,
+				D3FAD564192F297400612C9B /* 返回箭头.png */,
+				D3FAD565192F297400612C9B /* 返回箭头@2x.png */,
+			);
+			path = images;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -277,11 +327,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3FAD566192F297400612C9B /* loadingImage.png in Resources */,
+				D3FAD571192F297400612C9B /* 缓存条@2x.png in Resources */,
+				D3FAD56B192F297400612C9B /* 总时间条@2x.png in Resources */,
 				D3A6906C18EBF1BF000029B8 /* Images.xcassets in Resources */,
+				D3FAD572192F297400612C9B /* 返回箭头.png in Resources */,
+				D3FAD56C192F297400612C9B /* 播放拖动钮.png in Resources */,
+				D3FAD568192F297400612C9B /* 下载按钮.png in Resources */,
+				D3FAD573192F297400612C9B /* 返回箭头@2x.png in Resources */,
 				D3A6905E18EBF1BF000029B8 /* InfoPlist.strings in Resources */,
+				D3FAD570192F297400612C9B /* 缓存条.png in Resources */,
+				D3FAD567192F297400612C9B /* loadingImage@2x.png in Resources */,
+				D3FAD56A192F297400612C9B /* 总时间条.png in Resources */,
 				D3D2D829192E2C01005C1679 /* README.md in Resources */,
 				D3A6906718EBF1BF000029B8 /* Main.storyboard in Resources */,
+				D3FAD56F192F297400612C9B /* 播放进度条@2x.png in Resources */,
+				D3FAD56D192F297400612C9B /* 播放拖动钮@2x.png in Resources */,
+				D3FAD56E192F297400612C9B /* 播放进度条.png in Resources */,
 				D3D2D82A192E2C01005C1679 /* TODO.md in Resources */,
+				D3FAD569192F297400612C9B /* 下载按钮@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

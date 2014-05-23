@@ -55,12 +55,14 @@
  *
  */
 - (void)loadURL:(NSURL *)url;
+
+
 - (void)fullScreen;
 
 // 播放时，rate是1
 - (void)play;
 // 暂停时，rate是0
-- (void)pause;
+- (void)userPause;
 
 // 只在view controller pop时调用
 - (void)stop;

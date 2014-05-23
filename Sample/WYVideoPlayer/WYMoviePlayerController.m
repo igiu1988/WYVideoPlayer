@@ -23,9 +23,6 @@
     
     UIButton *fullScreenButton;
     
-    CGPoint playerOriginalCenter;
-    CGRect playerOriginalBounds;
-    
     
     // for test
     __weak IBOutlet UILabel *loadingProgressLabel;
@@ -33,24 +30,31 @@
     UIActivityIndicatorView *activityIndicator;
 }
 @end
-// TODO: 在视频加载时，应该有一个默认图片显示，并且有一个小圈在转
 
 @implementation WYMoviePlayerController
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
     self.view.backgroundColor = [UIColor blackColor];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    
+    // 对于 ios6 要使用 wantsFullScreenLayout, 这样subview的layout就与ios7一样了
+    if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
+        self.wantsFullScreenLayout = YES;
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+    }else{
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    }
+    
+    
     
     [slider setMaximumTrackImage:[UIImage imageNamed:@"缓存条"] forState:UIControlStateNormal];
     [slider setMinimumTrackImage:[UIImage imageNamed:@"播放进度条"] forState:UIControlStateNormal];
     [slider setThumbImage:[UIImage imageNamed:@"播放拖动钮"] forState:UIControlStateNormal];
     
-    // 对于 ios6 要使用 wantsFullScreenLayout, 这样subview的layout就与ios7一样了
-    if ([UIDevice currentDevice].systemVersion.floatValue < 7 ) {
-        self.wantsFullScreenLayout = YES;
-    }
+    
+
     
     playButton.enabled = NO;
     slider.enabled = NO;
@@ -118,11 +122,9 @@
             
             
             // 全屏播放时，状态栏要设置成半透明的
-            if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
-                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-            }else{
-                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-            }
+//            if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
+//                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+//            }
             
         }else{
             [UIView animateWithDuration:animationDuration animations:^{
@@ -130,8 +132,10 @@
                 loadingProgressLabel.transform = CGAffineTransformIdentity;
             }];
             
+//            if ([UIDevice currentDevice].systemVersion.floatValue < 7) {
+//                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+//            }
             
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         }
     }];
     
@@ -149,14 +153,14 @@
         }
     }];
     
-    playerOriginalBounds = _playerView.bounds;
-    playerOriginalCenter = _playerView.center;
-    
     
     UITapGestureRecognizer *hideSubviewGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSubviewGestureAction:)];
     hideSubviewGesture.numberOfTapsRequired = 1;
+    hideSubviewGesture.delegate = self;
     
     [_playerView addGestureRecognizer:hideSubviewGesture];
+    
+    
     UITapGestureRecognizer *fullScreentGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fullScreenAction:)];
     fullScreentGesture.numberOfTapsRequired = 2;
     [hideSubviewGesture requireGestureRecognizerToFail:fullScreentGesture];
@@ -170,10 +174,16 @@
     [_playerView loadURL:url];
 }
 
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+//    UIView *view = [gestureRecognizer locationInView:<#(UIView *)#>]
+    return YES;
+}
+
 - (void)viewWillDisappear:(BOOL)animated{
     
     [super viewWillDisappear:animated];
-    [_playerView pause];
+    [_playerView userPause];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
@@ -197,7 +207,7 @@
         [_playerView play];
         [playButton setTitle:@"暂停" forState:UIControlStateNormal];
     }else{
-        [_playerView pause];
+        [_playerView userPause];
         [playButton setTitle:@"播放" forState:UIControlStateNormal];
     }
 }
@@ -215,6 +225,7 @@
 
 - (void)hideSubviewGestureAction:(UITapGestureRecognizer *)tap
 {
+    
     CGPoint point = [tap locationInView:_playerView];
     if (CGRectContainsPoint(backButton.frame, point)) {
         [self popAction:nil];

@@ -30,7 +30,6 @@
     
     id periodicTimeObserver;
     
-//    BOOL subViewHide;
     AFNetworkReachabilityManager *networkReachabilityManager;
     
     
@@ -70,37 +69,20 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     return self;
 }
 
-- (void)ApplicationWillResignActive
-{
-    [[self player] pause];
-}
-
-- (void)ApplicationDidBecomeActive
-{
-    if (!_isPauseByUser) {
-        [self play];
-    }
-}
-
 - (void)doInit
 {
     self.backgroundColor = [UIColor blackColor];
+    _useLastPlayedTime = YES;
     
-    [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:&PlayerViewFrameContext];
-    playerOriginalBounds = self.bounds;
-    playerOriginalCenter = self.center;
+    [self observeRoate];
     
-    // 监听设备旋转。如果旋转被用户锁定，系统就不再会发该通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [self observeAppState];
     
-    // 监听应用程序ResignActive通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ApplicationWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ApplicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     // 监听网络状态
     networkReachabilityManager = [AFNetworkReachabilityManager managerForDomain:@"www.baidu.com"];
+    [networkReachabilityManager startMonitoring];
     
-    _useLastPlayedTime = YES;
 }
 
 
@@ -116,6 +98,30 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     [(AVPlayerLayer *)[self layer] setPlayer:__player];
     
 }
+
+
+#pragma mark - 应用状态监测及处理
+// 监听app的应用状态，处理播放器是否需要暂停
+- (void)observeAppState
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ApplicationWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(ApplicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (void)ApplicationWillResignActive
+{
+    [[self player] pause];
+}
+
+- (void)ApplicationDidBecomeActive
+{
+    if (!_isPauseByUser) {
+        [self play];
+    }
+}
+
+
+
 #pragma mark - 视频载入
 - (void)showLoadingView
 {
@@ -128,16 +134,21 @@ static const NSString *ItemPlaybackBufferEmptyContext;
 {
     videoURL = url;
     
-    [networkReachabilityManager startMonitoring];
-    
-    // 变为3G网络时，给个暂停，但是其实还是在继续加载的，这个控制不了。提示用户选择继续播放，或者停止，停止了，那就真停止了，显示loadingView
     __weak WYVideoPlayerView *weakSelf = self;
     [networkReachabilityManager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         if (status == AFNetworkReachabilityStatusReachableViaWWAN) {
-            // TODO: 变为手机蜂窝网络，停止加载
-            //            playerItem = nil;
+            // 变为手机蜂窝网络，停止加载。
+            // Player已经存在时，才去提示这个alert
+            AVPlayer *weakPlayer = [weakSelf valueForKey:@"player"];
+            if (weakPlayer) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"你正在使用手机网络\n继续使用会消耗流量\n还要继续吗？" delegate:weakSelf cancelButtonTitle:@"停止" otherButtonTitles:@"继续", nil];
+                    [alert show];
+                });
+            }
+            
         }else if  ( status == AFNetworkReachabilityStatusReachableViaWiFi ){
-            // TODO: 从 last time 处开始播放
+            // Wi-Fi 情况，正常播放
             dispatch_async(dispatch_get_main_queue(), ^{
                 AVPlayer *weakPlayer = [weakSelf valueForKey:@"player"];
                 if (!weakPlayer) {
@@ -196,7 +207,6 @@ static const NSString *ItemPlaybackBufferEmptyContext;
                                                                              name:AVPlayerItemDidPlayToEndTimeNotification
                                                                            object:playerItem];
                                 [self setPlayer:[AVQueuePlayer queuePlayerWithItems:@[playerItem]]];
-//                                [self setPlayer:player];
                                 [self.layer addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionNew context:&ReadyForDisplayContext];
                                 
                                 
@@ -219,15 +229,15 @@ static const NSString *ItemPlaybackBufferEmptyContext;
 }
 
 
+#pragma mark - Observe Response
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     
     
     if (context == &ItemStatusContext) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (playerItemStatusChangeBlock) {
-                playerItemStatusChangeBlock(playerItem.status, self);
-            }
+            
             if (playerItem.status == AVPlayerItemStatusReadyToPlay) {
                 if (needShowActivityIndicatorViewBlock){
                     needShowActivityIndicatorViewBlock(NO, self);
@@ -243,7 +253,10 @@ static const NSString *ItemPlaybackBufferEmptyContext;
                 }];
                 
                 if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive){
-                    [self play];
+                    if (!_isPauseByUser) {
+                        [self play];
+                    }
+                    
                 }
                 
             }
@@ -266,13 +279,14 @@ static const NSString *ItemPlaybackBufferEmptyContext;
         });
         return;
     }else if (context == &ItemDurationContext){
+        _duration = playerItem.duration.value/playerItem.duration.timescale;
+#warning 下面这句话，放的地方不 对啊。下面这个回调只希望调用一次即可，要找个好地方。这个地方会多次调用，会产生其它异常
         dispatch_async(dispatch_get_main_queue(), ^{
-            _duration = playerItem.duration.value/playerItem.duration.timescale;
-            if (currentTimeUpdateBlock) {
-                currentTimeUpdateBlock(0, self);
+            if (playerItemStatusChangeBlock) {
+                playerItemStatusChangeBlock(playerItem.status, self);
             }
-            
         });
+        
         return;
     }else if (context == &PlayerViewFrameContext){
         playerOriginalBounds = self.bounds;
@@ -280,6 +294,7 @@ static const NSString *ItemPlaybackBufferEmptyContext;
         
         return;
     }else if (context == &ReadyForDisplayContext){
+        
         
         
         return;
@@ -300,10 +315,10 @@ static const NSString *ItemPlaybackBufferEmptyContext;
             dispatch_async(dispatch_get_main_queue(), ^{
                 // TODO: ItemPlaybackLikelyToKeepUpContext这个observer的执行事件有问题
 
-                if (isBuffering) {
-                    isBuffering = NO;
-                    [[self player] play];
-                }
+//                if (isBuffering) {
+//                    isBuffering = NO;
+//                    [[self player] play];
+//                }
                 if (needShowActivityIndicatorViewBlock){
                     needShowActivityIndicatorViewBlock(NO, self);
                 }
@@ -338,20 +353,33 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     
     
 }
-- (void)pause
+
+// 由用户触发的暂停操作，有一个明确的标识
+- (void)userPause
+{
+    _isPauseByUser = YES;
+    [self doPause];
+}
+
+// 由app判断情况而触发的暂停，没有明确的标识
+- (void)autoPause
+{
+    [self doPause];
+}
+
+- (void)doPause
 {
     [[self player] pause];
-    _isPauseByUser = YES;
+    
     // 记录播放位置
     [self saveLastPlayTime];
 }
 
 - (void)stop
 {
-    
     [networkReachabilityManager stopMonitoring];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
-    [self pause];
+    [self doPause];
     
     [asset cancelLoading];
     asset = nil;
@@ -387,6 +415,32 @@ static const NSString *ItemPlaybackBufferEmptyContext;
 }
 
 #pragma mark - 全屏、旋转相关
+- (void)observeRoate
+{
+    [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:&PlayerViewFrameContext];
+    playerOriginalBounds = self.bounds;
+    playerOriginalCenter = self.center;
+    
+    // 监听设备旋转。如果旋转被用户锁定，系统就不再会发该通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+
+/**
+ *  只有在全屏的情况下才响应左横屏、右横屏操作
+ */
+- (void)deviceOrientationDidChange:(NSNotification *)notification
+{
+    if (!CGAffineTransformIsIdentity(self.transform)) {
+        UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+        if ( deviceOrientation == UIDeviceOrientationLandscapeRight) {
+            [self changeOrientationTo:UIInterfaceOrientationLandscapeLeft rotationAngle:M_PI];
+        }else if ( deviceOrientation == UIDeviceOrientationLandscapeLeft){
+            [self changeOrientationTo:UIInterfaceOrientationLandscapeRight rotationAngle:M_PI];
+        }
+    }
+    
+}
+
 - (void)fullScreen{
     
     // 在还不能播放的情况下，不允许旋转
@@ -450,23 +504,6 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     }];
 }
 
-/**
- *  只有在全屏的情况下才响应左横屏、右横屏操作
- */
-- (void)deviceOrientationDidChange:(NSNotification *)notification
-{
-    if (!CGAffineTransformIsIdentity(self.transform)) {
-        UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-        if ( deviceOrientation == UIDeviceOrientationLandscapeRight) {
-            [self changeOrientationTo:UIInterfaceOrientationLandscapeLeft rotationAngle:M_PI];
-        }else if ( deviceOrientation == UIDeviceOrientationLandscapeLeft){
-            [self changeOrientationTo:UIInterfaceOrientationLandscapeRight rotationAngle:M_PI];
-        }
-    }
-
-}
-
-
 #pragma mark - Block
 
 - (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVideoPlayerView *playerView))block
@@ -508,7 +545,10 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     return [hash uppercaseString];
 }
 
-// 这里会特意的把时间做一个调整，感觉这样有助于用户回忆起上次播放到哪儿
+/**
+ *  触发点是暂停。这里现在包括：应用各种resign active，应用停止，播放器页面pop。
+ *  这里会特意的把时间做一个调整，感觉这样有助于用户回忆起上次播放到哪儿
+ */
 - (void)saveLastPlayTime;
 {
     NSString *cache = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
@@ -540,6 +580,22 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     NSNumber *time = cacheDictionary[key];
     return [time longLongValue];
 }
+
+
+#pragma mark - 网络监测及控制
+
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        // 停止
+        [self stop];
+    }else{
+        // 继续
+    }
+}
+
 
 
 @end
