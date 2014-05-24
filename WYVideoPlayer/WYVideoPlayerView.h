@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+@protocol WYVideoPlayerViewDelegate;
+
 
 
 /**
@@ -16,6 +18,7 @@
  */
 @interface WYVideoPlayerView : UIView
 
+@property (nonatomic, strong) id<WYVideoPlayerViewDelegate> delegate;
 /**
  *  视频时长，单位是s。
  *  在setPlayerItemStatusChangeBlock调用时该duration才被正确初始化。所以最好在那里调用该duration。或者也可以使用key-observer
@@ -25,7 +28,7 @@
 /**
  *  当前视频时间，在视频正在加载或者播放时，直接赋值可更改视频播放起点。单位是s
  */
-@property (assign, nonatomic) int64_t currentTime;
+@property (assign, readonly, nonatomic) int64_t currentTime;
 
 /**
  *  当rate是0时，表示视频是暂停状态。更改此值就可以改变播放速率
@@ -68,9 +71,14 @@
 - (void)stop;
 
 /**
- *  视频第一次缓冲并可以播放时的回调
+ *  想要通过滑动条改变播放时间，请依次使用如下方法
  */
-- (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVideoPlayerView *playerView))block;
+- (void)beginSetCurrentTime;
+- (void)setCurrentTime:(int64_t)currentTime;
+- (void)endSetCurrentTime;
+
+
+//- (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVideoPlayerView *playerView))block;
 
 /**
  *  视频播放进度回调
@@ -84,18 +92,30 @@
  */
 - (void)setOrientationWillChangeBlock:(void(^)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVideoPlayerView *playerView))block;
 
-/**
- *  视频已加载的时间的回调。一般用于远程视频
- *
- */
-- (void)setLoadedTimeUpdateBlock:(void(^)(int64_t loadTime, WYVideoPlayerView *playerView))block;
+
+//- (void)setLoadedTimeUpdateBlock:(void(^)(, WYVideoPlayerView *playerView))block;
 
 /**
  *  播放器是否需要显示activityIndicator的回调
  *
  */
 - (void)setNeedShowActivityIndicatorViewBlock:(void (^)(BOOL shouldShow, WYVideoPlayerView *playerView))block;
+
+
+
 @end
 
+@protocol WYVideoPlayerViewDelegate <NSObject>
 
+/**
+ *  对于远程视频，这个方法会被调用多次
+ */
+- (void)playerView:(WYVideoPlayerView *)playerView readyForDisplay:(BOOL)readyForDisplay;
+
+/**
+ *  视频已加载的时间的回调。一般用于远程视频
+ *
+ */
+- (void)playerView:(WYVideoPlayerView *)playerView updateLoadedTime:(int64_t )loadTime;
+@end
 

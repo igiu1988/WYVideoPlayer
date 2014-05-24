@@ -11,7 +11,7 @@
 
 
 
-@interface WYMoviePlayerController () <UIGestureRecognizerDelegate>
+@interface WYMoviePlayerController () <WYVideoPlayerViewDelegate>
 {
     UIView *controlBar;
     __weak IBOutlet UIButton *playButton;
@@ -75,6 +75,8 @@
 
 - (void)setupPlayer
 {
+    self.playerView.delegate = self;
+    
     // 1.设置视频缓冲时显示的activityIndicator
     [UIActivityIndicatorView appearance].color = [UIColor redColor];
     activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -90,17 +92,7 @@
     self.playerView.backgroundColor = [UIColor blackColor];
     
     // 4.视频第一次缓冲并可以播放时的回调
-    [self.playerView setPlayerItemStatusChangeBlock:^(AVPlayerItemStatus status, WYVideoPlayerView *playerView) {
-        if (status == AVPlayerItemStatusReadyToPlay) {
-            slider.maximumValue = playerView.duration;
-            playButton.enabled = YES;
-            slider.enabled = YES;
-            fullScreenButton.enabled = YES;
-            [playButton setTitle:@"暂停" forState:UIControlStateNormal];
-        }else{
-            NSLog(@"AVPlayerItemStatus 发生变化");
-        }
-    }];
+
     
     // 5.视频播放进度
     [self.playerView setCurrentTimeUpdateBlock:^(int64_t currentTime, WYVideoPlayerView *playerView) {
@@ -140,9 +132,9 @@
     }];
     
     // 7.视频已加载时间的变化回调
-    [self.playerView setLoadedTimeUpdateBlock:^(int64_t loadTime, WYVideoPlayerView *playerView) {
-        loadingProgressLabel.text = [NSString stringWithFormat:@"已加载%lld / %lld", loadTime, playerView.duration];
-    }];
+//    [self.playerView setLoadedTimeUpdateBlock:^(int64_t loadTime, WYVideoPlayerView *playerView) {
+//        loadingProgressLabel.text = [NSString stringWithFormat:@"已加载%lld / %lld", loadTime, playerView.duration];
+//    }];
     
     // 8.播放器是否需要显示activityIndicator
     [self.playerView setNeedShowActivityIndicatorViewBlock:^(BOOL shouldShow, WYVideoPlayerView *playerView) {
@@ -156,8 +148,6 @@
     
     UITapGestureRecognizer *hideSubviewGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSubviewGestureAction:)];
     hideSubviewGesture.numberOfTapsRequired = 1;
-    hideSubviewGesture.delegate = self;
-    
     [_playerView addGestureRecognizer:hideSubviewGesture];
     
     
@@ -166,18 +156,11 @@
     [hideSubviewGesture requireGestureRecognizerToFail:fullScreentGesture];
     [_playerView addGestureRecognizer:fullScreentGesture];
     
-    //    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/IMG_0313.MOV"];
-    //    NSURL *url = [NSURL fileURLWithPath:path];
-    // http://v.yingshibao.chuanke.com/CET4_video/4001_zongshu_I.mp4
-    // http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8
-    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
+//    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/movie.mov"];
+//    NSURL *url = [NSURL fileURLWithPath:path];
+    NSURL *url = [NSURL URLWithString:@"http://v.yingshibao.chuanke.com/CET4_video/4001_zongshu_I.mp4"];
+//    NSURL *url = [NSURL URLWithString:@"http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"];
     [_playerView loadURL:url];
-}
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-//    UIView *view = [gestureRecognizer locationInView:<#(UIView *)#>]
-    return YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -253,39 +236,34 @@
         
     }else{
         
-        if (_playerView.subviews.count > 0) {
-            UIView *view = _playerView.subviews[0];
-            if (view.alpha) {
-                [UIView animateWithDuration:0.15 animations:^{
-                    slider.alpha = 0;
-                    topControlView.alpha = 0;
-                    downloadButton.alpha = 0;
-                    backButton.alpha = 1;
-                }];
-            }else{
-                [UIView animateWithDuration:0.15 animations:^{
-                    slider.alpha = 1;
-                    topControlView.alpha = 1;
-                    downloadButton.alpha = 1;
-                    backButton.alpha = 1;
-                }];
-            }
+        if (slider.alpha) {
+            [UIView animateWithDuration:0.15 animations:^{
+                slider.alpha = 0;
+                topControlView.alpha = 0;
+                downloadButton.alpha = 0;
+                backButton.alpha = 1;
+            }];
+        }else{
+            [UIView animateWithDuration:0.15 animations:^{
+                slider.alpha = 1;
+                topControlView.alpha = 1;
+                downloadButton.alpha = 1;
+                backButton.alpha = 1;
+            }];
         }
     }
 }
 
 // 滑动块在滑动时要先暂停，然后改变时间，结束时要播放。如果不先暂停，slider会有乱串的现象
 - (IBAction)sliderChangeBegin:(id)sender {
-//    [_playerView pause];
+    [_playerView beginSetCurrentTime];
 }
 
 - (IBAction)sliderChange:(UISlider *)sender {
-    _playerView.currentTime = sender.value;
+    [_playerView setCurrentTime:sender.value];
 }
 - (IBAction)sliderChangeFinish:(id)sender {
-//    if (!_playerView.isPauseByUser) {
-//        [_playerView play];
-//    }
+    [_playerView endSetCurrentTime];
     
 }
 
@@ -301,6 +279,29 @@
 - (IBAction)downloadAction:(id)sender {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"其它操作" message:nil delegate:nil cancelButtonTitle:@"好的" otherButtonTitles:nil];
     [alert show];
+}
+
+#pragma mark - WYVideoPlayerViewDelegate
+- (void)playerView:(WYVideoPlayerView *)playerView readyForDisplay:(BOOL)readyForDisplay
+{
+    if (readyForDisplay) {
+        slider.maximumValue = playerView.duration;
+        playButton.enabled = YES;
+        slider.enabled = YES;
+        fullScreenButton.enabled = YES;
+        [playButton setTitle:@"暂停" forState:UIControlStateNormal];
+    }else{
+        slider.maximumValue = playerView.duration;
+        playButton.enabled = YES;
+        slider.enabled = YES;
+        fullScreenButton.enabled = YES;
+        [playButton setTitle:@"暂停" forState:UIControlStateNormal];
+    }
+}
+
+- (void)playerView:(WYVideoPlayerView *)playerView updateLoadedTime:(int64_t )loadTime
+{
+    loadingProgressLabel.text = [NSString stringWithFormat:@"已加载%lld / %lld", loadTime, playerView.duration];
 }
 @end
 

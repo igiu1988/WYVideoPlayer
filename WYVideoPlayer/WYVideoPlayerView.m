@@ -22,10 +22,10 @@
     CGRect playerOriginalBounds;
     
     
-    void (^playerItemStatusChangeBlock)(AVPlayerItemStatus status, WYVideoPlayerView *playerView);
+//    void (^playerItemStatusChangeBlock)(AVPlayerItemStatus status, WYVideoPlayerView *playerView);
     void(^currentTimeUpdateBlock)(int64_t currentTime, WYVideoPlayerView *playerView);
     void(^orientationWillChangeBlock)(float animationDuration, UIInterfaceOrientation orientationWillChangeTo, float angle, WYVideoPlayerView *playerView);
-    void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVideoPlayerView *playerView);
+//    void(^loadedTimeUpdateBlock)(int64_t loadTime, WYVideoPlayerView *playerView);
     void (^needShowActivityIndicatorViewBlock)(BOOL shouldShow, WYVideoPlayerView *playerView);
     
     id periodicTimeObserver;
@@ -43,7 +43,7 @@
 static const NSString *ItemStatusContext;
 static const NSString *ItemLoadedTimeContext;
 static const NSString *ItemDurationContext;
-static const NSString *PlayerViewFrameContext;
+static const NSString *PlayerRateContext;
 static const NSString *ReadyForDisplayContext;
 static const NSString *ItemPlaybackLikelyToKeepUpContext;
 static const NSString *ItemPlaybackBufferEmptyContext;
@@ -208,14 +208,18 @@ static const NSString *ItemPlaybackBufferEmptyContext;
                                                                            object:playerItem];
                                 [self setPlayer:[AVQueuePlayer queuePlayerWithItems:@[playerItem]]];
                                 [self.layer addObserver:self forKeyPath:@"readyForDisplay" options:NSKeyValueObservingOptionNew context:&ReadyForDisplayContext];
+                                [[self player] addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionNew context:&PlayerRateContext];
                                 
                                 
                                 // 每0.1秒更新一次
                                 periodicTimeObserver = [[self player] addPeriodicTimeObserverForInterval:CMTimeMake(1, 50) queue:NULL usingBlock:^(CMTime time) {
-                                    _currentTime = time.value / time.timescale;
-                                    if (currentTimeUpdateBlock) {
-                                        currentTimeUpdateBlock((time.value)/time.timescale, self);
-                                    }
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        _currentTime = time.value / time.timescale;
+                                        if (currentTimeUpdateBlock) {
+                                            currentTimeUpdateBlock((time.value)/time.timescale, self);
+                                        }
+                                    });
+                                    
                                 }];
                                 
                             }
@@ -242,6 +246,9 @@ static const NSString *ItemPlaybackBufferEmptyContext;
                 if (needShowActivityIndicatorViewBlock){
                     needShowActivityIndicatorViewBlock(NO, self);
                 }
+                
+                
+                
                 [UIView animateWithDuration:0.2 animations:^{
                     _loadingView.transform = CGAffineTransformMakeScale(3, 3);
                     _loadingView.alpha = 0;
@@ -259,12 +266,18 @@ static const NSString *ItemPlaybackBufferEmptyContext;
                     
                 }
                 
+
+                
             }
         });
         
         return;
     }else if (context == &ItemLoadedTimeContext){
         dispatch_async(dispatch_get_main_queue(), ^{
+            /**
+             *  为什么loadedTimeRanges属性是数组？
+             *  答：加载远程视频，很有可能因为用户的操作，所加载的时间段很有可能是不连续的，所以是一个数组
+             */
             NSArray *loadedTimeRanges = [[[self player] currentItem] loadedTimeRanges];
             
             CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
@@ -272,31 +285,31 @@ static const NSString *ItemPlaybackBufferEmptyContext;
             float durationSeconds = CMTimeGetSeconds(timeRange.duration);
             NSTimeInterval result = startSeconds + durationSeconds;
             NSLog(@"已载入 %f", result);
-            if (loadedTimeUpdateBlock) {
-                loadedTimeUpdateBlock(result, self);
+            if ([_delegate respondsToSelector:@selector(playerView:updateLoadedTime:)]) {
+                [_delegate playerView:self updateLoadedTime:result];
             }
+//            if (loadedTimeUpdateBlock) {
+//                loadedTimeUpdateBlock(result, self);
+//            }
 
         });
         return;
     }else if (context == &ItemDurationContext){
+        // 在加载m3u8这种播放列表类型的文件，会走这个。而播放本地视频，或者服务器上的mp4视频，却不走这个，必须要在ReadyForDisplayContext中获取总时长
         _duration = playerItem.duration.value/playerItem.duration.timescale;
-#warning 下面这句话，放的地方不 对啊。下面这个回调只希望调用一次即可，要找个好地方。这个地方会多次调用，会产生其它异常
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (playerItemStatusChangeBlock) {
-                playerItemStatusChangeBlock(playerItem.status, self);
-            }
-        });
-        
-        return;
-    }else if (context == &PlayerViewFrameContext){
-        playerOriginalBounds = self.bounds;
-        playerOriginalCenter = self.center;
         
         return;
     }else if (context == &ReadyForDisplayContext){
         
+        _duration = playerItem.duration.value/playerItem.duration.timescale;
+        if ([_delegate respondsToSelector:@selector(playerView:readyForDisplay:)]) {
+            [_delegate playerView:self readyForDisplay:[change[@"new"] boolValue]];
+        }
         
-        
+//        // 使用playerView:readyForDisplay:代替playerItemStatusChangeBlock
+//        if (playerItemStatusChangeBlock) {
+//            playerItemStatusChangeBlock(playerItem.status, self);
+//        }
         return;
     }else if (context == &ItemPlaybackBufferEmptyContext){
         NSLog(@"ItemPlaybackBufferEmptyContext %@", playerItem.playbackBufferEmpty ? @"YES":@"NO");
@@ -324,6 +337,9 @@ static const NSString *ItemPlaybackBufferEmptyContext;
                 }
             });
         }
+        return;
+    }else if (context == &PlayerRateContext){
+        NSLog(@"%f", self.queuePlayer.rate);
         return;
     }
     
@@ -392,9 +408,9 @@ static const NSString *ItemPlaybackBufferEmptyContext;
         [playerItem removeObserver:self forKeyPath:@"playbackBufferEmpty" context:&ItemPlaybackBufferEmptyContext];
         [playerItem removeObserver:self forKeyPath:@"playbackLikelyToKeepUp" context:&ItemPlaybackLikelyToKeepUpContext];
         [self.layer removeObserver:self forKeyPath:@"readyForDisplay" context:&ReadyForDisplayContext];
+        [[self player] removeObserver:self forKeyPath:@"rate" context:&PlayerRateContext];
     }
     
-    [self removeObserver:self forKeyPath:@"frame" context:&PlayerViewFrameContext];
 
     playerItem = nil;
     [[self player] removeAllItems];
@@ -407,17 +423,29 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     [[self player] pause];
 }
 
-- (void)setCurrentTime:(int64_t)currentTime
+
+#pragma mark - 调整时间
+
+- (void)beginSetCurrentTime
 {
     [[self player] pause];
+}
+
+- (void)setCurrentTime:(int64_t)currentTime
+{
     CMTime time = CMTimeMake(currentTime, 1);
     [[self player] seekToTime:time];
+}
+- (void)endSetCurrentTime
+{
+    if (!_isPauseByUser) {
+        [[self player] play];
+    }
 }
 
 #pragma mark - 全屏、旋转相关
 - (void)observeRoate
 {
-    [self addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:&PlayerViewFrameContext];
     playerOriginalBounds = self.bounds;
     playerOriginalCenter = self.center;
     
@@ -506,10 +534,10 @@ static const NSString *ItemPlaybackBufferEmptyContext;
 
 #pragma mark - Block
 
-- (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVideoPlayerView *playerView))block
-{
-    playerItemStatusChangeBlock = block;
-}
+//- (void)setPlayerItemStatusChangeBlock:(void (^)(AVPlayerItemStatus status, WYVideoPlayerView *playerView))block
+//{
+//    playerItemStatusChangeBlock = block;
+//}
 
 - (void)setCurrentTimeUpdateBlock:(void(^)(int64_t currentTime, WYVideoPlayerView *playerView))block
 {
@@ -521,10 +549,10 @@ static const NSString *ItemPlaybackBufferEmptyContext;
     orientationWillChangeBlock = block;
 }
 
-- (void)setLoadedTimeUpdateBlock:(void(^)(int64_t loadTime, WYVideoPlayerView *playerView))block
-{
-    loadedTimeUpdateBlock = block;
-}
+//- (void)setLoadedTimeUpdateBlock:(void(^)(int64_t loadTime, WYVideoPlayerView *playerView))block
+//{
+//    loadedTimeUpdateBlock = block;
+//}
 
 - (void)setNeedShowActivityIndicatorViewBlock:(void (^)(BOOL shouldShow, WYVideoPlayerView *playerView))block
 {
